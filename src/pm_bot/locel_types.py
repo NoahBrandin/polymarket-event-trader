@@ -1,0 +1,104 @@
+from datetime import datetime, timezone
+from decimal import Decimal
+from enum import Enum, StrEnum
+from typing import TypeVar, Type
+
+E = TypeVar("E", bound=StrEnum)
+
+
+def get_unix_time_millis_to_datetime(tms: float) -> datetime:
+    return datetime.fromtimestamp(tms/1000.0, tz=timezone.utc)
+
+def get_str_enum_from_value(value: str, enum_class: Type[E]) -> E:
+    """Sucht ein Enum-Mitglied basierend auf seinem zugewiesenen Wert."""
+    return enum_class(value)
+
+# 1. NonNegativeDecimal (Muss >= 0 sein)
+class NonNegativeDecimal(Decimal):
+    def __new__(cls, value=0):
+        decimal_value = Decimal(value)
+        if decimal_value < 0:
+            raise ValueError(
+                f"NonNegativeDecimal darf nicht negativ sein (gegeben: {value})"
+            )
+        return super().__new__(cls, decimal_value)
+
+
+# 2. Probability (Muss zwischen 0.0 und 1.0 liegen)
+class Probability(Decimal):
+    def __new__(cls, value=0):
+        decimal_value = Decimal(value)
+        if decimal_value < 0 or decimal_value > 1:
+            raise ValueError(
+                f"Probability muss zwischen 0 und 1 liegen (gegeben: {value})"
+            )
+        return super().__new__(cls, decimal_value)
+
+class RunMode(StrEnum):
+    NONE = "none" #used for debugging and testing
+    LIVE = "live"
+    PAPER = "paper"
+
+class LogMode(StrEnum):
+    DEBUG = "DEBUG"
+    PRODUCTION = "PRODUCTION"
+    SILENT = "SILENT"
+
+class SourceMode(StrEnum):
+    LIVE = "live"
+    BACKTEST = "backtest"
+
+
+class StrategyName(StrEnum):
+    NONE = "none" #used for debugging and testing
+    DEFAULT = "default"
+
+class StrategyType(StrEnum):
+    UPDATE_DRIVEN = "update_driver"
+
+class ProducerName(StrEnum):
+    WEBSOCKET = "WebsocketFeed"
+
+class ProducerDataType(StrEnum): #Gibt den DatenTyp an den ein Producer ausgibt
+    DEFAULT = "default"
+    WEBSOCKET = "websocket"
+    DATA_API = "data_api"
+
+class SelectionType(StrEnum):
+    MARKT_EVENT = "market_event" # -> asseat als ids
+    API_DATA_EVENT = "api_data_event"
+
+
+# --- Trading ---
+
+class TradingSide(str, Enum):
+    """Beschreibt die brokerunabhängige Kauf- oder Verkaufsrichtung einer Order."""
+    BUY = "BUY"
+    SELL = "SELL"
+
+
+class TimeInForce(str, Enum):
+    GTC = "GTC"
+    GTD = "GTD"
+    FOK = "FOK"
+    FAK = "FAK"
+
+
+class ExecutionStatus(str, Enum):
+    LIVE = "LIVE"
+    FILLED = "FILLED"
+    PARTIALLY_FILLED = "PARTIALLY_FILLED"
+    CANCELLED = "CANCELLED"
+    EXPIRED = "EXPIRED"
+    REJECTED = "REJECTED"
+    FAILED = "FAILED"
+
+    @property
+    def terminal(self) -> bool:
+        return self in {
+            ExecutionStatus.FILLED,
+            ExecutionStatus.CANCELLED,
+            ExecutionStatus.EXPIRED,
+            ExecutionStatus.REJECTED,
+            ExecutionStatus.FAILED,
+        }
