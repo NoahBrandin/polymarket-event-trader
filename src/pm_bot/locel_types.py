@@ -45,8 +45,8 @@ class Probability(Decimal):
 
 class RunMode(StrEnum):
     NONE = "none" #used for debugging and testing
-    LIVE = "live"
-    PAPER = "paper"
+    LIVE = "live_execution"
+    PAPER = "paper_execution"
 
 class LogMode(StrEnum):
     DEBUG = "DEBUG"

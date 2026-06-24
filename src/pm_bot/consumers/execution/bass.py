@@ -1,7 +1,8 @@
-from abc import ABC
-from enum import Enum
+from abc import ABC, abstractmethod
 
-from src.pm_bot.configuration.trading import ExecutionReport
+from datetime import datetime
+
+from src.pm_bot.configuration.trading import ExecutionReport, OrderIntent
 from src.pm_bot.locel_types import RunMode
 
 
@@ -9,12 +10,18 @@ class Execution(ABC):
     def __init__(self, run_mode: RunMode):
         self.run_mode = run_mode
 
-    async def submit_order(self, order) -> ExecutionReport:
+    @abstractmethod
+    async def execute(self, order) -> ExecutionReport:
         pass
 
+    @abstractmethod
     async def start(self):
         pass
+
+    @abstractmethod
     async def stop(self):
         pass
-    def execute(self):
-        pass
+
+    def creat_execution_name(self, order: OrderIntent) -> str:
+        name = self.run_mode.name + "." + order.side.name + "." + order.asset_id + "." + datetime.isoformat()
+        return name

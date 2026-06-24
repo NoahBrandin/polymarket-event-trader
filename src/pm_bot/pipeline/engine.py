@@ -244,7 +244,7 @@ class Engine:
             self._submitted_orders += 1
             logger.info(f"Submitted order: {order}")
             try:
-                report = await self.execution.submit_order(order)
+                report = await self.execution.execute(order)
             except Exception as error:
                 logger.error(f"Execution order-submission failed unexpectedly: {error}")
                 raise Exception(f"Execution Oder-Bearbeitung fehlgeschlagen: {error}")
