@@ -1,5 +1,5 @@
 import asyncio
-import logging
+from datetime import datetime, timezone
 from dataclasses import dataclass
 from typing import Callable
 
@@ -8,8 +8,8 @@ from src.pm_bot.configuration.selection import SubscriptionSelection
 from src.pm_bot.configuration.trading import StrategyDecision
 from src.pm_bot.consumers.execution.bass import Execution
 from src.pm_bot.consumers.strategy.base import Strategy
-from src.pm_bot.locel_types import StrategyType, StrategyName, RunMode
-from src.pm_bot.pipeline.events import EventEnvelope
+from src.pm_bot.locel_types import StrategyName, RunMode
+from src.pm_bot.pipeline.events import EventEnvelope, EventType
 from src.pm_bot.pipeline.queue import EventQueueStats, EventQueue
 from src.pm_bot.producer.base import Producer
 
@@ -104,7 +104,7 @@ class Engine:
                     await self.strategy.on_stop()
                 except Exception as error:
                     logger.error(f"Strategy stop failed: {error}")
-                    raise Exception(f"Strategy-Stop fehlgeschlagen: {error}")
+                    raise Exception(f"Strategy stop failed: {error}")
 
             if self.execution is not None:
                 try:
@@ -120,7 +120,10 @@ class Engine:
 
     async def _start(self):
         if self.strategy is not None:
-            await self._apply_subscription_selection(self.strategy.get_subscription_selection())
+            selection = await self.strategy.get_subscription_selection()
+            if selection is None:
+                selection = await self.producer.get_default_subscription_selection()
+            await self._apply_subscription_selection(selection)
 
             try:
                 initial_decision = await self.strategy.on_start()
@@ -129,6 +132,7 @@ class Engine:
                 raise Exception(f"Strategy-Start fehlgeschlagen: {error}")
 
             if self.execution is not None:
+
                 try:
                     report = await self._execution_handel_decisions(initial_decision)
                 except Exception as error:
@@ -183,6 +187,7 @@ class Engine:
                 try:
                     await self._process_message(message)
                 finally:
+                    self._processed_events += 1
                     self.event_queue.task_done()
             else:
                 queue_get.cancel()
@@ -193,7 +198,13 @@ class Engine:
         Event-Pipeline: WebSocket-Marktdaten aktualisieren zusätzlich State und
         Execution; API-Daten werden direkt an Handler und Strategie weitergereicht.
         """
+        object.__setattr__(envelope, "received_at", datetime.now(timezone.utc)) #sehr vorsichtig umgeht (frozen=True) bei EventEnvelop ist aber schneller als replcat()
+        object.__setattr__(envelope, "sequence", self._processed_events)
+
         logger.info(f"Event: {envelope}")
+
+        if envelope.event_type == EventType.ERROR or envelope.event_type == EventType.HEARTBEAT: # Error wird nicht bearbeite (später vilt mit risk_manger)
+            return
 
         if self.event_handler is not None: #Führe ein on_event Ereignis aus
             self.event_handler(envelope)

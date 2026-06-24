@@ -9,14 +9,38 @@ from src.pm_bot.configuration.selection import SubscriptionSelection
 from src.pm_bot.locel_types import TradingSide, TimeInForce, ExecutionStatus
 
 
-@dataclass(slots=True, frozen=True, kw_only=True)
+@dataclass(slots=True, frozen=True)
 class StrategyDecision:
-    orders: tuple[OrderIntent, ...] = ()
+    """Entscheidung einer Strategie, die Orders und/oder neue Subscriptions
+
+    enthält.
+    """
+
+    # FIX: default_factory sorgt für eine frische, saubere Liste pro Instanz
+    orders: list[OrderIntent] = field(default_factory=list)
     subscription_selection: SubscriptionSelection | None = None
 
     @classmethod
     def empty(cls) -> "StrategyDecision":
         return cls()
+
+    def __str__(self) -> str:
+        # Dynamischen Titel generieren (z.B. [OrdersDecision] oder [OrdersAndSubscriptionSelectionDecision])
+        components = []
+        if self.orders:
+            components.append("Orders")
+        if self.subscription_selection:
+            if components:
+                components.append("And")
+            components.append("SubscriptionSelection")
+
+        decision_title = (
+            "".join(components) if components else "Empty"
+        ) + "Decision"
+
+        return (f"[{decision_title}] "
+                f"orders={f"[{', '.join(str(order) for order in self.orders)}]" if self.orders else "[]"}, "
+                f"subscription={self.subscription_selection}")
 
 
 @dataclass(slots=True, frozen=True, kw_only=True)
@@ -25,7 +49,7 @@ class OrderIntent:
 
     strategy_name: str
     asset_id: str
-    market: str | None
+    market_id: str | None
     side: TradingSide
     size: Decimal
     limit_price: Decimal
@@ -56,6 +80,33 @@ class OrderIntent:
                 raise ValueError("GTD benötigt expiration")
             if self.expiration.tzinfo is None or self.expiration.utcoffset() is None:
                 raise ValueError("GTD expiration muss timezone-aware sein")
+
+    def __str__(self) -> str:
+        # Die absoluten Kern-Daten der Order, die IMMER da sind
+        core_info = (
+            f"id={self.client_order_id[:8]}... "  # Gekürzte UUID für bessere Lesbarkeit im Log
+            f"strategy={self.strategy_name} "
+            f"asset={self.asset_id} "
+            f"side={self.side.name} "  # .name falls TradingSide ein Enum ist
+            f"size={self.size} "
+            f"limit={self.limit_price} "
+            f"tif={self.time_in_force.name}"
+        )
+
+        # Optionale Parameter dynamisch sammeln, um das Log sauber zu halten
+        optional_flags = []
+        if self.market_id:
+            optional_flags.append(f"market={self.market_id}")
+        if self.post_only:
+            optional_flags.append("POST_ONLY")
+        if self.neg_risk:
+            optional_flags.append("neg_risk=True")
+        if self.time_in_force is TimeInForce.GTD and self.expiration:
+            optional_flags.append(f"exp={self.expiration.isoformat()}")
+
+        # Zusammenbauen mit geschweiften Klammern
+        flags_str = f" [{', '.join(optional_flags)}]" if optional_flags else ""
+        return f"OrderIntent {{{core_info}}}{flags_str}"
 
 
 @dataclass(slots=True, frozen=True, kw_only=True)

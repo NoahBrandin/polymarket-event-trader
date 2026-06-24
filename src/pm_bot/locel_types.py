@@ -1,3 +1,4 @@
+import re
 from datetime import datetime, timezone
 from decimal import Decimal
 from enum import Enum, StrEnum
@@ -5,6 +6,14 @@ from typing import TypeVar, Type
 
 E = TypeVar("E", bound=StrEnum)
 
+def camel_to_snake(text):
+    # Fügt vor jedem Großbuchstaben einen Unterstrich ein,
+    # es sei denn, er steht ganz am Anfang.
+    s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", text)
+    # Behandelt Fälle mit aufeinanderfolgenden Großbuchstaben (z.B. XMLParser -> xml_parser)
+    s2 = re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1)
+    # Macht am Ende alles kleingeschrieben
+    return s2.lower()
 
 def get_unix_time_millis_to_datetime(tms: float) -> datetime:
     return datetime.fromtimestamp(tms/1000.0, tz=timezone.utc)
@@ -51,10 +60,11 @@ class SourceMode(StrEnum):
 
 class StrategyName(StrEnum):
     NONE = "none" #used for debugging and testing
-    DEFAULT = "default"
+    DEFAULT_RANDOM_STRATEGY = "DefaultRandomStrategy"
 
 class StrategyType(StrEnum):
     UPDATE_DRIVEN = "update_driver"
+    TICK_DRIVEN = "tick_driver"
 
 class ProducerName(StrEnum):
     WEBSOCKET = "WebsocketFeed"

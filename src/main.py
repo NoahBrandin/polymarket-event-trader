@@ -18,7 +18,7 @@ _LOG_MODE: LogMode = LogMode.DEBUG
 _SOURCE_MODE: SourceMode = SourceMode.LIVE
 
 _PRODUCER: ProducerName = ProducerName.WEBSOCKET
-_STRATEGY: StrategyName = StrategyName.NONE
+_STRATEGY: StrategyName = StrategyName.DEFAULT_RANDOM_STRATEGY
 
 
 _ENGINE_QUEUE_SIZE: int = 5000

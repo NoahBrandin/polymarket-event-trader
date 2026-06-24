@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 from src.pm_bot.configuration.selection import SubscriptionSelection
@@ -18,18 +18,23 @@ class Strategy(ABC):
     def __init__(self, config: StrategyConfig):
         self.config = config
 
+    @abstractmethod
     def get_subscription_selection(self) -> SubscriptionSelection:
         pass
 
-    async def on_start(self):
+    @abstractmethod
+    async def on_start(self) -> StrategyDecision | None:
         pass
 
+    @abstractmethod
     async def on_event(self, envelope: EventEnvelope) -> StrategyDecision | None:
         """Verarbeitet ein ausgewähltes Marktevent und liefert Entscheidungen."""
         pass
 
+    @abstractmethod
     async def on_execution(self, report: ExecutionReport) -> StrategyDecision | None:
         pass
 
+    @abstractmethod
     async def on_stop(self) -> None:
         pass

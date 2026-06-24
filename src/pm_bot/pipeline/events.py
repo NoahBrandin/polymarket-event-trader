@@ -33,7 +33,7 @@ class EventEnvelope:
 
     producer_name: str
     producer_type: ProducerDataType
-    sequence: int = 0
+    sequence: int = -1
 
     received_at: datetime = datetime.utcnow()
     timestamp: datetime

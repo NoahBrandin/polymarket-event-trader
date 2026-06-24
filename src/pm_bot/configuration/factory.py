@@ -7,7 +7,7 @@ from src.pm_bot.configuration.config import BotConfig
 from src.pm_bot.configuration.logger_config import get_logger
 from src.pm_bot.consumers.execution.bass import Execution
 from src.pm_bot.consumers.strategy.base import Strategy
-from src.pm_bot.locel_types import RunMode, StrategyName, ProducerDataType, SourceMode, ProducerName
+from src.pm_bot.locel_types import RunMode, StrategyName, ProducerDataType, SourceMode, ProducerName, camel_to_snake
 from src.pm_bot.producer.base import Producer
 
 logger = get_logger()
@@ -18,15 +18,6 @@ PRODUCER_PATH = "src/pm_bot/producer"
 STRATEGY_PATH = "src/pm_bot/consumers/strategy"
 EXECUTION_PATH = "src/pm_bot/consumers/execution"
 
-def camel_to_snake(text):
-    # Fügt vor jedem Großbuchstaben einen Unterstrich ein,
-    # es sei denn, er steht ganz am Anfang.
-    s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", text)
-    # Behandelt Fälle mit aufeinanderfolgenden Großbuchstaben (z.B. XMLParser -> xml_parser)
-    s2 = re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1)
-    # Macht am Ende alles kleingeschrieben
-    return s2.lower()
-
 def _load_class(parent_path: str, class_name) -> type[Any]:
     """
     Plugin-Auflösung.
@@ -36,13 +27,17 @@ def _load_class(parent_path: str, class_name) -> type[Any]:
     """
     # Producer Klasse muss so heissen wie Producer_file (nur anderer Case)
     parent_path = parent_path + "/" + camel_to_snake(class_name)
-    module = importlib.import_module(parent_path.replace("/", "."))
+    try:
+        module = importlib.import_module(parent_path.replace("/", "."))
+    except ModuleNotFoundError:
+        logger.error(f"Model {parent_path} not found in files")
+        raise ModuleNotFoundError(f"Model {parent_path} not found in files")
 
     try:
         loaded = getattr(module, class_name)
     except AttributeError as error:
         logger.error(f"Class {class_name} not found in {parent_path}")
-        raise ImportError(f"Klasse nicht gefunden: {class_name}") from error
+        raise ImportError(f"Class {class_name} not found in {parent_path} ") from error
     if not isinstance(loaded, type):
         logger.error(f"{class_name} not a class in {parent_path}")
         raise TypeError(f"class_path verweist nicht auf eine Klasse: {class_name}")
