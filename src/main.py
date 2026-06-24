@@ -14,7 +14,7 @@ from src.pm_bot.producer.base import Producer
 _BOT_NAME: str = "testerheld"
 
 _RUN_MODE: RunMode = RunMode.NONE
-_LOG_MODE: LogMode = LogMode.DEBUG
+_LOG_MODE: LogMode = LogMode.INFO
 _SOURCE_MODE: SourceMode = SourceMode.LIVE
 
 _PRODUCER: ProducerName = ProducerName.WEBSOCKET

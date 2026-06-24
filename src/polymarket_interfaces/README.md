@@ -27,9 +27,9 @@ Dieses Paket kapselt die öffentlichen Polymarket-Datenschnittstellen und ist vo
 Beispiel:
 
 ```python
-from polymarket_interfaces import CLOBAPI, ClobSide
+from polymarket_interfaces import ClobMarketAPI, ClobSide
 
-async with CLOBAPI() as clob:
+async with ClobMarketAPI() as clob:
     book = await clob.get_order_book(token_id)
     buy_price = await clob.get_price(token_id, ClobSide.BUY)
 ```

@@ -7,10 +7,10 @@ from decimal import Decimal
 import httpx
 import pytest
 
-from polymarket_interfaces.clob_api import (
+from polymarket_interfaces.clob_market_api import (
     BatchPriceHistoryParams,
     BookRequest,
-    CLOBAPI,
+    ClobMarketAPI,
     ClobSide,
     PriceHistoryInterval,
     PriceHistoryParams,
@@ -28,7 +28,7 @@ def make_client(handler):
         base_url="https://clob.polymarket.com",
         transport=transport,
     )
-    return CLOBAPI(http_client=http_client), http_client
+    return ClobMarketAPI(http_client=http_client), http_client
 
 
 def test_get_order_book_normalizes_decimal_and_top_of_book():

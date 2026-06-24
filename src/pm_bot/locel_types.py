@@ -50,8 +50,8 @@ class RunMode(StrEnum):
 
 class LogMode(StrEnum):
     DEBUG = "DEBUG"
-    PRODUCTION = "PRODUCTION"
-    SILENT = "SILENT"
+    INFO = "INFO"
+    ERROR = "ERROR"
 
 class SourceMode(StrEnum):
     LIVE = "live"

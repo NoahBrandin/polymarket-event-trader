@@ -7,16 +7,16 @@ _logger_instance = None
 
 class LogProfils(Enum):
     DEBUG = {
-        "cli_level": logging.CRITICAL,     # Im Dev-Modus wollen wir ALLES im Terminal sehen
+        "cli_level": logging.WARNING,     # Im Dev-Modus wollen wir ALLES im Terminal sehen
         "file_level": logging.DEBUG,
         "msg": "Entwicklungs-Modus: Volles Logging im Terminal und in Datei."
     }
-    PRODUCTION = {
+    INFO = {
         "cli_level": logging.WARNING,   # In Prod nur Warnungen/Fehler im Terminal
         "file_level": logging.INFO,     # Aber detaillierte Infos in der Datei
         "msg": "Produktions-Modus: Terminal geschont, Datei loggt ab INFO."
     }
-    SILENT = {
+    ERROR = {
         "cli_level": logging.CRITICAL,  # Fast keine Ausgabe im Terminal
         "file_level": logging.WARNING,   # Nur wichtige Fehler in der Datei
         "msg": "Silent-Modus: Minimale Log-Einträge."

@@ -5,12 +5,12 @@
 # ============================================================================
 # Bot-Komponenten importieren Polymarket-Typen über dieses Paket.
 
-from .clob_api import (
+from .clob_market_api import (
     CLOB_API_BASE,
     INITIAL_CURSOR,
     BatchPriceHistoryParams,
     BookRequest,
-    CLOBAPI,
+    ClobMarketAPI,
     ClobMarket,
     ClobMarketPage,
     ClobMarketToken,
@@ -73,7 +73,7 @@ __all__ = [
     "BookEvent",
     "BatchPriceHistoryParams",
     "BookRequest",
-    "CLOBAPI",
+    "ClobMarketAPI",
     "ClobMarket",
     "ClobMarketPage",
     "ClobMarketToken",

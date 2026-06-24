@@ -257,7 +257,7 @@ class ClobMarketPage:
     limit: int | None
     count: int | None
 
-class CLOBAPI:
+class ClobMarketAPI:
     """
     Client für öffentliche CLOB-Markt-, Preis- und Orderbuchdaten.
 
@@ -286,7 +286,7 @@ class CLOBAPI:
             headers={"Accept": "application/json"},
         )
 
-    async def __aenter__(self) -> "CLOBAPI":
+    async def __aenter__(self) -> "ClobMarketAPI":
         return self
 
     async def __aexit__(self, *exc_info: object) -> None:
