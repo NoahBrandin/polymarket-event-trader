@@ -12,6 +12,30 @@ Dieses Paket kapselt die öffentlichen Polymarket-Datenschnittstellen und ist vo
 - Zahlen, Datumswerte und JSON-Stringfelder normalisieren,
 - Rate-Limiting und einheitliche HTTP-Fehler.
 
+## CLOB API
+
+`clob_api.py` liefert öffentliche Handelsplatzdaten, versendet jedoch keine Orders:
+
+- CLOB-Märkte über Condition-IDs und Cursor laden,
+- einzelne und gebündelte Orderbücher abrufen,
+- beste Kauf-/Verkaufspreise, Midpoints und Spreads laden,
+- letzte Trades sowie einzelne und gebündelte Preisverläufe abrufen,
+- Tick-Size, Neg-Risk-Status und Basisgebühr ermitteln,
+- Preise und Größen mit `Decimal` statt binären Fließkommazahlen verarbeiten,
+- fehlerhafte oder unvollständige Antworten fail-closed als `PolymarketError` ablehnen.
+
+Beispiel:
+
+```python
+from polymarket_interfaces import CLOBAPI, ClobSide
+
+async with CLOBAPI() as clob:
+    book = await clob.get_order_book(token_id)
+    buy_price = await clob.get_price(token_id, ClobSide.BUY)
+```
+
+Für signierte Orders, API-Key-Ableitung und L2-Authentifizierung ist das offizielle Polymarket-SDK zu verwenden. Diese Schnittstelle speichert keine privaten Schlüssel und sendet keine Handelsaufträge.
+
 ## Market WebSocket
 
 `polymarket_websocket/` verarbeitet öffentliche Echtzeit-Marktdaten:

@@ -54,13 +54,6 @@ class OrderIntent:
     size: Decimal
     limit_price: Decimal
     time_in_force: TimeInForce = TimeInForce.GTC
-    tick_size: Decimal | None = None
-    neg_risk: bool | None = None
-    expiration: datetime | None = None
-    post_only: bool = False
-    client_order_id: str = field(default_factory=lambda: uuid4().hex)
-    metadata: Mapping[str, Any] = field(default_factory=dict)
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def __post_init__(self) -> None:
         if not self.strategy_name.strip():
@@ -71,42 +64,20 @@ class OrderIntent:
             raise ValueError("size muss positiv sein")
         if not Decimal("0") < self.limit_price < Decimal("1"):
             raise ValueError("limit_price muss zwischen 0 und 1 liegen")
-        if self.tick_size is not None and self.tick_size <= 0:
-            raise ValueError("tick_size muss positiv sein")
-        if self.post_only and self.time_in_force in {TimeInForce.FOK, TimeInForce.FAK}:
-            raise ValueError("post_only ist nur mit GTC oder GTD zulässig")
-        if self.time_in_force is TimeInForce.GTD:
-            if self.expiration is None:
-                raise ValueError("GTD benötigt expiration")
-            if self.expiration.tzinfo is None or self.expiration.utcoffset() is None:
-                raise ValueError("GTD expiration muss timezone-aware sein")
 
     def __str__(self) -> str:
         # Die absoluten Kern-Daten der Order, die IMMER da sind
         core_info = (
-            f"id={self.client_order_id[:8]}... "  # Gekürzte UUID für bessere Lesbarkeit im Log
+            f"asset_id={self.asset_id[:8]}... "  # Gekürzte UUID für bessere Lesbarkeit im Log
             f"strategy={self.strategy_name} "
-            f"asset={self.asset_id} "
+            f"side={self.side.name} "
             f"side={self.side.name} "  # .name falls TradingSide ein Enum ist
             f"size={self.size} "
             f"limit={self.limit_price} "
             f"tif={self.time_in_force.name}"
         )
 
-        # Optionale Parameter dynamisch sammeln, um das Log sauber zu halten
-        optional_flags = []
-        if self.market_id:
-            optional_flags.append(f"market={self.market_id}")
-        if self.post_only:
-            optional_flags.append("POST_ONLY")
-        if self.neg_risk:
-            optional_flags.append("neg_risk=True")
-        if self.time_in_force is TimeInForce.GTD and self.expiration:
-            optional_flags.append(f"exp={self.expiration.isoformat()}")
-
-        # Zusammenbauen mit geschweiften Klammern
-        flags_str = f" [{', '.join(optional_flags)}]" if optional_flags else ""
-        return f"OrderIntent {{{core_info}}}{flags_str}"
+        return f"OrderIntent {{{core_info}}}"
 
 
 @dataclass(slots=True, frozen=True, kw_only=True)

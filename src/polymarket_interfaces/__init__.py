@@ -1,10 +1,28 @@
-"""Öffentliche API für Gamma- und WebSocket-Schnittstellen."""
+"""Öffentliche API für Gamma-, CLOB- und WebSocket-Schnittstellen."""
 
 # ============================================================================
 # Stabile öffentliche Schnittstelle
 # ============================================================================
-# Bot-Komponenten importieren Gamma- und WebSocket-Typen über dieses Paket.
+# Bot-Komponenten importieren Polymarket-Typen über dieses Paket.
 
+from .clob_api import (
+    CLOB_API_BASE,
+    INITIAL_CURSOR,
+    BatchPriceHistoryParams,
+    BookRequest,
+    CLOBAPI,
+    ClobMarket,
+    ClobMarketPage,
+    ClobMarketToken,
+    ClobOrderBookLevel,
+    ClobSide,
+    LastTradePrice,
+    OrderBook,
+    PriceHistoryInterval,
+    PriceHistoryParams,
+    PricePoint,
+    PriceQuote,
+)
 from .gamma_api import (
     GAMMA_API_BASE,
     ApiType,
@@ -46,17 +64,28 @@ from .polymarket_websocket import (
 )
 
 __all__ = [
+    "CLOB_API_BASE",
     "GAMMA_API_BASE",
+    "INITIAL_CURSOR",
     "MARKET_WEBSOCKET_URL",
     "ApiType",
     "BestBidAskEvent",
     "BookEvent",
+    "BatchPriceHistoryParams",
+    "BookRequest",
+    "CLOBAPI",
+    "ClobMarket",
+    "ClobMarketPage",
+    "ClobMarketToken",
+    "ClobOrderBookLevel",
+    "ClobSide",
     "ConnectionState",
     "ErrorCode",
     "EventSearchParams",
     "GammaAPI",
     "GammaEvent",
     "GammaMarket",
+    "LastTradePrice",
     "LastTradePriceEvent",
     "MarketEvent",
     "MarketEventMessage",
@@ -67,13 +96,18 @@ __all__ = [
     "MarketWebSocketClient",
     "MarketWebSocketConfig",
     "NewMarketEvent",
+    "OrderBook",
     "OrderBookLevel",
     "OrderBookStore",
     "OrderBookView",
     "PolymarketError",
     "PolymarketWebSocketError",
     "PriceChangeEvent",
+    "PriceHistoryInterval",
+    "PriceHistoryParams",
     "PriceLevelChange",
+    "PricePoint",
+    "PriceQuote",
     "RateLimiter",
     "ReconnectPolicy",
     "Side",
