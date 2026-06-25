@@ -1,0 +1,115 @@
+[2026-06-25 13:47:20,587] [INFO] [logger_config.py:72] -> ► Globaler Logger initialisiert. Datei: trading_bot.log
+[2026-06-25 13:47:20,587] [INFO] [bot_setup.py:27] -> Logger setup
+[2026-06-25 13:47:20,587] [DEBUG] [bot_setup.py:29] -> Setting up bot_config
+[2026-06-25 13:47:20,587] [INFO] [bot_setup.py:32] -> Bot config setup
+[2026-06-25 13:47:20,587] [DEBUG] [bot_setup.py:34] -> Setting up components
+[2026-06-25 13:47:20,587] [DEBUG] [factory.py:64] -> Execution_mode is None, type is <enum 'ExecutionMode'>, but isinstance(execution_mode, ExecutionMode)= True
+[2026-06-25 13:47:20,587] [DEBUG] [factory.py:51] -> Creating plugin DefaultRandomStrategy
+[2026-06-25 13:47:20,588] [DEBUG] [factory.py:54] -> Class DefaultRandomStrategy loaded
+[2026-06-25 13:47:20,588] [DEBUG] [factory.py:51] -> Creating plugin WebsocketFeed
+[2026-06-25 13:47:20,718] [DEBUG] [factory.py:54] -> Class WebsocketFeed loaded
+[2026-06-25 13:47:20,718] [DEBUG] [base.py:30] -> Producer init ok
+[2026-06-25 13:47:20,718] [INFO] [bot_setup.py:39] -> Components setup
+[2026-06-25 13:47:20,718] [INFO] [bot_setup.py:41] -> Starting Engine
+[2026-06-25 13:47:20,719] [DEBUG] [bot_setup.py:73] -> Engine initialized
+[2026-06-25 13:47:20,719] [DEBUG] [bot_setup.py:85] -> Signal 2 is being registered
+[2026-06-25 13:47:20,719] [DEBUG] [bot_setup.py:85] -> Signal 15 is being registered
+[2026-06-25 13:47:20,720] [DEBUG] [bot_setup.py:96] -> Asyncio engine_task and stop_task going to be called
+[2026-06-25 13:47:20,720] [INFO] [engine.py:86] -> Engine.run() is starting. Whit producer: WebsocketFeed, strategy: DefaultRandomStrategy, execution: None
+[2026-06-25 13:47:21,119] [INFO] [engine.py:276] -> [MARKET SELECTION] ids=['102844052859529992637803443259193395522411387362312885030298797134413940349829', '103705222348348023632358209307161171933864556870678885035120650593331360918837', '105267568073659068217311993901927962476298440625043565106676088842803600775810', '108233603819467706476318984012158651931658302669301887462181073562758483842092', '108999723207897941876452935557011604067917389120996960199512481363958770540884', '109223657334725476924710634471321315385389367621714474291402615707818729630121', '112680630004798425069810935278212000865453267506345451433803052322987302357330', '115428153746996892211798999366308897078723117634059783423375188043903703749062', '115556263888245616435851357148058235707004733438163639091106356867234218207169', '15540133404064485946536607974212890170021691204987131841181394872998839987451', '17516427576383382756368467656206258206490015951115433065318503962238754362428', '18812649149814341758733697580460697418474693998558159483117100240528657629879', '21695138873211375451055566770107682325494206727818897067665810321709249824909', '24327803960645909378149041810697343640752122608192367041827900158592826352552', '26608800110066527607246656145735191327716408714826934367635297922290688100618', '27576533317283401577758999384642760405921738493660383550832555714312627457443', '31940783580344558651011323787577288681658737625185216525249046282994042503801', '32270411694523539495262303868629477861017829722282576458031815333486368239544', '40689385937970031985272152180777653235879119412231903065658922913468759560353', '4394372887385518214471608448209527405727552777602031099972143344338178308080', '45415751658241142530386585138386640503488308219341470020075667342738719018629', '45484070731786948288366703334552551439356529561722304542938873238430842810537', '47055352475798285920984907840917431698812931301054546103955312973973172985230', '52986718774908357330412653486471347449818893503063830313445318937088822580057', '53831553061883006530739877284105938919721408776239639687877978808906551086026', '63603874958591978684257718702104189214159397118281244112857573557732401361881', '64533579809297525579033609963634939501013332859992608996100633472507000251907', '77121637225348873006259930776623502125079210522997384841464684944292365296940', '77166477669007661974218999697956080000161736671391584414287437514245884953047', '81739002353269632749850710185641576213562066971072676369728657545679630163887', '8585617872562550075367684165842985213222082790621129799520234539666057750015', '86488478623677188352872801318507143761188967461168408688159600382919967378486', '87036266705700330884624690101790543034325645582506946990660049003915176778714', '88275040060084773376557187972215267513049848642895776801789297917961077894224', '90435811253665578014957380826505992530054077692143838383981805324273750424057', '91863162118308663069733924043159186005106558783397508844234610341221325526200', '92388629082681805622801622703528982922543286352927708208755887536971583436902', '94376205816022955542979635542279932967359915765455578534002478996104754801969', '96797656031191119176188453471637044475353637081608890153571023284371119486681', '98022490269692409998126496127597032490334070080325855126491859374983463996227']
+[2026-06-25 13:47:21,119] [INFO] [websocket_feed.py:89] -> Websocket is connected whit: wss://ws-subscriptions-clob.polymarket.com/ws/market
+[2026-06-25 13:47:21,466] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,467] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,468] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,469] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,470] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,471] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,471] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,471] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,471] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,471] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,471] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,471] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,471] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,471] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,471] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,471] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,472] [INFO] [engine.py:221] -> Event: [BOOK] producer=WebsocketFeed producer_type=websocket seq=0 received=2026-06-25T11:47:21.472026+00:00 event_time=2026-06-25T11:47:22.015000+00:00 payload={[MarketUpdatePayload] event_type=EventType.BOOK market_id=0x30d55d8124ee1e12dabe89201badc45669b81dff69e4ce44d961f32878ec178a timestamp=2026-06-25 11:47:22.015000+00:00 asset_events=[AssetUpdatePayload(asset_id='27576533317283401577758999384642760405921738493660383550832555714312627457443', side=None, best_bid=None, best_ask=None, old_tick_size=None, new_tick_size=None, fee_rate_bps=None, bids=[{'price': '0.001', 'size': '6886555.88'}, {'price': '0.002', 'size': '1516676'}, {'price': '0.003', 'size': '234010.25'}, {'price': '0.004', 'size': '63305'}, {'price': '0.005', 'size': '61300'}, {'price': '0.006', 'size': '43633.3'}, {'price': '0.007', 'size': '30100'}, {'price': '0.008', 'size': '20000'}, {'price': '0.009', 'size': '20000'}, {'price': '0.01', 'size': '20600'}, {'price': '0.011', 'size': '10000'}, {'price': '0.012', 'size': '5200'}, {'price': '0.013', 'size': '10000'}, {'price': '0.014', 'size': '10000'}, {'price': '0.015', 'size': '5100'}, {'price': '0.016', 'size': '5000'}, {'price': '0.017', 'size': '5000'}, {'price': '0.018', 'size': '10000'}, {'price': '0.019', 'size': '9000'}, {'price': '0.02', 'size': '7655'}, {'price': '0.021', 'size': '103999.99'}, {'price': '0.022', 'size': '63000'}, {'price': '0.023', 'size': '7000'}, {'price': '0.024', 'size': '203000'}, {'price': '0.025', 'size': '6080'}, {'price': '0.026', 'size': '3000'}, {'price': '0.027', 'size': '3000'}, {'price': '0.028', 'size': '3000'}, {'price': '0.03', 'size': '6114.45'}, {'price': '0.031', 'size': '58105'}, {'price': '0.032', 'size': '2000'}, {'price': '0.033', 'size': '2000'}, {'price': '0.034', 'size': '15763.98'}, {'price': '0.035', 'size': '2079.99'}, {'price': '0.036', 'size': '4000'}, {'price': '0.037', 'size': '2200'}, {'price': '0.038', 'size': '1450'}, {'price': '0.04', 'size': '20296.29'}, {'price': '0.041', 'size': '6700'}, {'price': '0.042', 'size': '1900'}, {'price': '0.043', 'size': '94444'}, {'price': '0.044', 'size': '23500'}, {'price': '0.045', 'size': '35477'}, {'price': '0.046', 'size': '10000'}, {'price': '0.047', 'size': '47774.99'}, {'price': '0.048', 'size': '16400'}, {'price': '0.049', 'size': '45000'}, {'price': '0.05', 'size': '48370'}, {'price': '0.051', 'size': '37082.78'}, {'price': '0.052', 'size': '13424.08'}, {'price': '0.053', 'size': '30450'}, {'price': '0.054', 'size': '1020496.05'}], asks=[{'price': '0.999', 'size': '19408797.04'}, {'price': '0.998', 'size': '2145262.23'}, {'price': '0.997', 'size': '1855.56'}, {'price': '0.996', 'size': '1048701'}, {'price': '0.995', 'size': '2000106.12'}, {'price': '0.994', 'size': '83.33'}, {'price': '0.993', 'size': '71.42'}, {'price': '0.992', 'size': '262206.5'}, {'price': '0.991', 'size': '500055.55'}, {'price': '0.99', 'size': '284.82'}, {'price': '0.989', 'size': '45.45'}, {'price': '0.984', 'size': '131072'}, {'price': '0.982', 'size': '1600'}, {'price': '0.98', 'size': '32.5'}, {'price': '0.979', 'size': '5.48'}, {'price': '0.968', 'size': '65536'}, {'price': '0.967', 'size': '60000'}, {'price': '0.95', 'size': '20'}, {'price': '0.949', 'size': '7.12'}, {'price': '0.936', 'size': '32768'}, {'price': '0.935', 'size': '30000'}, {'price': '0.934', 'size': '10000'}, {'price': '0.924', 'size': '23.8'}, {'price': '0.91', 'size': '5'}, {'price': '0.9', 'size': '12000'}, {'price': '0.898', 'size': '20000'}, {'price': '0.872', 'size': '8192'}, {'price': '0.871', 'size': '20000'}, {'price': '0.87', 'size': '22.93'}, {'price': '0.82', 'size': '36.14'}, {'price': '0.819', 'size': '5.4'}, {'price': '0.8', 'size': '5000'}, {'price': '0.779', 'size': '9000'}, {'price': '0.77', 'size': '5000'}, {'price': '0.75', 'size': '29812.5'}, {'price': '0.744', 'size': '4096'}, {'price': '0.73', 'size': '5'}, {'price': '0.71', 'size': '25344.84'}, {'price': '0.7', 'size': '3005'}, {'price': '0.67', 'size': '15647.73'}, {'price': '0.63', 'size': '12478.88'}, {'price': '0.61', 'size': '5'}, {'price': '0.609', 'size': '9000'}, {'price': '0.6', 'size': '1835.99'}, {'price': '0.59', 'size': '9443.6'}, {'price': '0.569', 'size': '9000'}, {'price': '0.55', 'size': '7521'}, {'price': '0.546', 'size': '186.76'}, {'price': '0.545', 'size': '1318'}, {'price': '0.5', 'size': '1736.01'}, {'price': '0.497', 'size': '100'}, {'price': '0.49', 'size': '100'}, {'price': '0.489', 'size': '9000'}, {'price': '0.48', 'size': '100'}, {'price': '0.47', 'size': '100'}, {'price': '0.46', 'size': '100'}, {'price': '0.45', 'size': '350'}, {'price': '0.44', 'size': '100'}, {'price': '0.409', 'size': '3000'}, {'price': '0.4', 'size': '1099.1'}, {'price': '0.399', 'size': '100'}, {'price': '0.377', 'size': '105'}, {'price': '0.363', 'size': '100'}, {'price': '0.36', 'size': '1163'}, {'price': '0.35', 'size': '7468.59'}, {'price': '0.349', 'size': '2095.26'}, {'price': '0.333', 'size': '100'}, {'price': '0.33', 'size': '115'}, {'price': '0.31', 'size': '7'}, {'price': '0.3', 'size': '1102.31'}, {'price': '0.298', 'size': '1440'}, {'price': '0.293', 'size': '200'}, {'price': '0.292', 'size': '305.65'}, {'price': '0.25', 'size': '9126.21'}, {'price': '0.24', 'size': '192.48'}, {'price': '0.233', 'size': '5'}, {'price': '0.23', 'size': '206.48'}, {'price': '0.22', 'size': '630'}, {'price': '0.21', 'size': '51.9'}, {'price': '0.2', 'size': '18176.84'}, {'price': '0.19', 'size': '830.25'}, {'price': '0.184', 'size': '100'}, {'price': '0.181', 'size': '100'}, {'price': '0.18', 'size': '806.47'}, {'price': '0.17', 'size': '1250'}, {'price': '0.167', 'size': '600'}, {'price': '0.166', 'size': '652.4'}, {'price': '0.164', 'size': '10312.58'}, {'price': '0.16', 'size': '3071.82'}, {'price': '0.15', 'size': '8778.15'}, {'price': '0.145', 'size': '163.04'}, {'price': '0.144', 'size': '4218.22'}, {'price': '0.14', 'size': '752.34'}, {'price': '0.134', 'size': '6731.33'}, {'price': '0.132', 'size': '422.53'}, {'price': '0.131', 'size': '50'}, {'price': '0.13', 'size': '1429.05'}, {'price': '0.129', 'size': '75'}, {'price': '0.126', 'size': '149.25'}, {'price': '0.125', 'size': '880.42'}, {'price': '0.124', 'size': '16796.73'}, {'price': '0.122', 'size': '200.38'}, {'price': '0.121', 'size': '126.6'}, {'price': '0.12', 'size': '7727.99'}, {'price': '0.119', 'size': '3659.8'}, {'price': '0.117', 'size': '200'}, {'price': '0.116', 'size': '342.67'}, {'price': '0.115', 'size': '151.51'}, {'price': '0.114', 'size': '4050'}, {'price': '0.113', 'size': '437.5'}, {'price': '0.11', 'size': '807.5'}, {'price': '0.108', 'size': '400'}, {'price': '0.105', 'size': '7714.92'}, {'price': '0.104', 'size': '5154.99'}, {'price': '0.103', 'size': '62499.24'}, {'price': '0.102', 'size': '50'}, {'price': '0.101', 'size': '258.82'}, {'price': '0.1', 'size': '16309.26'}, {'price': '0.099', 'size': '20519'}, {'price': '0.098', 'size': '91419.4'}, {'price': '0.097', 'size': '10020'}, {'price': '0.096', 'size': '10005'}, {'price': '0.095', 'size': '10402.37'}, {'price': '0.094', 'size': '10807.13'}, {'price': '0.093', 'size': '18117.37'}, {'price': '0.092', 'size': '11005'}, {'price': '0.091', 'size': '12833.38'}, {'price': '0.09', 'size': '17350.44'}, {'price': '0.089', 'size': '40737.97'}, {'price': '0.088', 'size': '10075'}, {'price': '0.087', 'size': '29451.34'}, {'price': '0.086', 'size': '16122.68'}, {'price': '0.085', 'size': '21151.39'}, {'price': '0.084', 'size': '33380.88'}, {'price': '0.083', 'size': '10000'}, {'price': '0.082', 'size': '46200'}, {'price': '0.081', 'size': '34496.66'}, {'price': '0.08', 'size': '17676.55'}, {'price': '0.079', 'size': '21111'}, {'price': '0.078', 'size': '30065'}, {'price': '0.077', 'size': '20399.99'}, {'price': '0.076', 'size': '10373.13'}, {'price': '0.075', 'size': '487116.94'}, {'price': '0.074', 'size': '116049.98'}, {'price': '0.073', 'size': '13330.77'}, {'price': '0.072', 'size': '12225'}, {'price': '0.071', 'size': '92499.98'}, {'price': '0.07', 'size': '17321.9'}, {'price': '0.069', 'size': '34382.43'}, {'price': '0.068', 'size': '10000'}, {'price': '0.067', 'size': '14184.76'}, {'price': '0.066', 'size': '20000'}, {'price': '0.065', 'size': '54767.03'}, {'price': '0.064', 'size': '800000'}, {'price': '0.063', 'size': '1163'}, {'price': '0.062', 'size': '159354.96'}, {'price': '0.061', 'size': '343184.28'}, {'price': '0.06', 'size': '5478.78'}, {'price': '0.059', 'size': '25664.79'}, {'price': '0.058', 'size': '42020.7'}, {'price': '0.057', 'size': '75840'}, {'price': '0.056', 'size': '52670.65'}, {'price': '0.055', 'size': '241269.8'}])]]}
+[2026-06-25 13:47:21,472] [INFO] [engine.py:108] -> Initiating GRACEFUL shutdown...
+[2026-06-25 13:47:21,472] [DEBUG] [engine.py:279] -> Shutting down producer...
+[2026-06-25 13:47:21,472] [DEBUG] [base.py:73] -> Producer stop requested
+[2026-06-25 13:47:21,472] [DEBUG] [base.py:75] -> Producer stop initiated
+[2026-06-25 13:47:21,472] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,472] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,472] [DEBUG] [websocket_feed.py:107] -> Websocket feed task was cancelled, shutting down...
+[2026-06-25 13:47:21,472] [DEBUG] [websocket_feed.py:113] -> Starting shutdown
+[2026-06-25 13:47:21,472] [DEBUG] [websocket_feed.py:168] -> Websocket-Feed stopping
+[2026-06-25 13:47:21,472] [DEBUG] [websocket_feed.py:186] -> Websocket-Feed stopped set
+[2026-06-25 13:47:21,472] [INFO] [bot_setup.py:106] -> User terminated Bot controlled or system was shutdown. Controlled shutdown initiated...
+[2026-06-25 13:47:21,474] [ERROR] [bot_setup.py:65] -> Bot_run failed with error 
