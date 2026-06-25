@@ -1,5 +1,5 @@
-from datetime import datetime
-from dataclasses import dataclass, fields
+from datetime import datetime, UTC
+from dataclasses import dataclass, fields, field
 from enum import Enum
 from typing import Any, Literal, Optional
 
@@ -35,7 +35,7 @@ class EventEnvelope:
     producer_type: ProducerDataType
     sequence: int = -1
 
-    received_at: datetime = datetime
+    received_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     timestamp: datetime
 
     event_type: EventType

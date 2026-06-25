@@ -41,7 +41,7 @@ class AccountInterface(ABC):
 class Position:
     size: Decimal
     price: Decimal
-    return_: Decimal = Decimal("0.00")
+    proceeds: Decimal = Decimal("0.00")
 
     def __str__(self):
         return f"Position: size={self.size} buyin_price={self.price} return={self.return_}"

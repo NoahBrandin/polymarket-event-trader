@@ -92,7 +92,7 @@ async def _run_engine(engine: Engine) -> EngineStats:
     stop_task = asyncio.create_task(stop_requested.wait(), name="pm-bot:stop-signal")
 
     try:
-        logger.debug("Asyncio engine_task and stop_task going to be called")
+        logger.warning("Bot started")
         done, _ = await asyncio.wait(  # wartet bis einer der Task fertig ist
             {engine_task, stop_task},
             return_when=asyncio.FIRST_COMPLETED,

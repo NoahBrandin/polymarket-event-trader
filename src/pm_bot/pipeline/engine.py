@@ -59,7 +59,7 @@ class Engine:
         self.producer: Producer = producer
         self.strategy: Strategy = strategy
         self.execution: Execution = execution
-        self.config = config
+        self.config:EngineConfig = config
 
         self._running = False
         self._stopping = False
@@ -300,6 +300,13 @@ class Engine:
             task.cancel()
             with suppress(asyncio.CancelledError):
                 await task
+
+    async def stop(self) -> None:
+        if self._stopping:
+            return
+
+        self._stopping = True
+        await self.producer.stop()
 
     @property
     def is_running(self) -> bool:

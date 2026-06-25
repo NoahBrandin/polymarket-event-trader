@@ -12,6 +12,8 @@ from pm_bot.locel_types import ExecutionMode, OrderStatus, TradingSide
 
 from datetime import datetime
 
+from tests.test_data_api import position_payload
+
 logger = logger_config.get_logger()
 
 class PaperExecution(Execution):
@@ -48,7 +50,7 @@ class PaperExecution(Execution):
         if asset_id in self.account_interface.get_open_positions().keys() :
             old_position = self.account_interface.get_open_positions()[asset_id]
             new_size = old_position.size + order.size
-            new_price = (old_position.price*old_position.size + current*order.size)/(old_position.size*order.size)
+            new_price = (old_position.price*old_position.size + current*order.size)/(old_position.size+order.size)
             self.account_interface.get_open_positions()[asset_id] = Position(price=new_price, size=new_size)
         else:
             self.account_interface.get_open_positions()[asset_id] = Position(price=current, size=order.size)
@@ -63,13 +65,15 @@ class PaperExecution(Execution):
     async def close(self, order:OrderIntent) -> ExecutionReport:
         asset_id = order.asset_id
 
-        current = await self._clob_market_api.get_midpoint(asset_id)
-        positions = self.account_interface.get_open_positions()[asset_id]
+        current_price = await self._clob_market_api.get_midpoint(asset_id)
+        position = self.account_interface.get_open_positions()[asset_id]
 
-        _return = positions.size*(current/positions.price)
-        positions.return_ = _return
-        self.account_interface.set_cash(self.account_interface.get_cash() + _return)
-        self.account_interface.get_close_positions()[asset_id] = positions
+        proceeds = position.size * current_price
+        pnl = position.size * (current_price - position.price)
+
+        position.proceeds = proceeds
+        self.account_interface.set_cash(self.account_interface.get_cash() + proceeds)
+        self.account_interface.get_close_positions()[asset_id] = position
 
         return ExecutionReport(
             execution_name=self.creat_execution_name(order),

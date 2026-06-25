@@ -159,8 +159,6 @@ class WebsocketFeed(Producer):
         except Exception as e:
             await self._emit_event(ErrorPayload(details=e, message="Pushing Message into Queue failed"),
                                    queue=event_queue)
-        finally:
-            await self._on_stop()
 
     async def _on_stop(self) -> None:
         """Setzt das Stopp-Signal."""
