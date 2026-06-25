@@ -127,7 +127,7 @@ class WebsocketFeed(Producer):
 
         Sendet Subskriptions-Pakete.
         """
-        await ws.send(json.dumps({"assets_ids": self._subscription_selection.ids, "type": MARKET_CHANNEL}))
+        await ws.send(json.dumps({"assets_ids": self._subscription_selection.selections, "type": MARKET_CHANNEL}))
 
     async def _on_message(self, message: str | bytes | dict , event_queue: EventQueue) -> None:
         """Verarbeitet jede eingehende Zeile vom Server."""

@@ -97,9 +97,9 @@ class Engine:
                     )
 
                 await self._consume_until_producers_finish() # Start main_loop
-        except Exception as error:
+            """except Exception as error:
             logger.error(f"Engine.run() is failed with error: {error}")
-            self._stopping = True
+            self._stopping = True"""
 
         finally:
             if self._stopping:
@@ -282,7 +282,7 @@ class Engine:
         await self.producer.set_subscription_selection(selection)
         self._selection_updates += 1
         if self.config.log_execution:
-            logger.info(f"[MARKET SELECTION] ids={sorted(selection.ids)}")
+            logger.info(f"[MARKET SELECTION] ids={sorted(selection.selections)}")
 
     async def _shutdown_producer(self) -> None:
         logger.debug("Shutting down producer...")
