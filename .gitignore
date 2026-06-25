@@ -8,6 +8,13 @@ __pycache__/
 .pytype/
 .hypothesis/
 
+#privet strategies
+strategy/*
+!strategy/base.py
+!strategy/default_random_strategy.py
+!strategy/__init__.py
+
+
 # Virtual environments
 .venv/
 venv/

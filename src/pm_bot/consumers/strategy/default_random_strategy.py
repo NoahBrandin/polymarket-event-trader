@@ -14,7 +14,7 @@ class DefaultRandomStrategy(Strategy):
     """
     def __init__(self) -> None:
         super().__init__(StrategyConfig(
-            strategy_name=StrategyName.DEFAULT_RANDOM_STRATEGY,
+            strategy_name= self.__class__.__name__,
             strategy_type=StrategyType.UPDATE_DRIVEN, #kann auch TICK_DRIVEN (eig alles muss nur auf tick angepasst werden)
             producer_type= ProducerDataType.WEBSOCKET, #kann auch DATA_API sein (eig alles)
         ))

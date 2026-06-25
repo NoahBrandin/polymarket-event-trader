@@ -69,12 +69,12 @@ def _create_execution(execution_mode) -> T:
         raise ValueError(f"run_mode {execution_mode} not supported")
 
 def _create_strategy(strategy_name) -> T:
-    if isinstance(strategy_name, StrategyName):
-        if strategy_name == StrategyName.NONE: return None
+    try:
+        if strategy_name == StrategyName.NONE.value: return None
         return _create_plugin(strategy_name, STRATEGY_PATH, Strategy)
-    else:
+    except (ValueError, TypeError) as error:
         logger.error(f"strategy_name {strategy_name} not supported")
-        raise ValueError(f"strategy_name {strategy_name} not supported")
+        raise Exception(f"strategy_name {strategy_name} not supported")
 
 def _create_producer(producer_name) -> T:
     if isinstance(producer_name, ProducerName):

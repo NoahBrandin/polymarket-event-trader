@@ -14,7 +14,7 @@ def setup(log_mode: LogMode = LogMode.INFO,
           bot_name:str = "poly",
           execution_mode: ExecutionMode = ExecutionMode.PAPER,
           producer: ProducerName = ProducerName.WEBSOCKET,
-          strategy: StrategyName = StrategyName.DEFAULT_RANDOM_STRATEGY,
+          strategy: str = StrategyName.DEFAULT_RANDOM_STRATEGY,
           engine_queue_size: int = 5000,
 
           testing_setup: bool = False,

@@ -10,4 +10,4 @@ class BotConfig:
     log_mode: LogMode
 
     producer_name: ProducerName
-    strategy_name: StrategyName
+    strategy_name: str

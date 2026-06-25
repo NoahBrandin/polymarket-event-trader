@@ -10,7 +10,7 @@ from pm_bot.pipeline.events import EventEnvelope
 
 @dataclass(frozen=True)
 class StrategyConfig:
-    strategy_name: StrategyName
+    strategy_name: str # must be classname of strategy
     strategy_type: StrategyType
     producer_type: ProducerDataType
 

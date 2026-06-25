@@ -8,7 +8,7 @@ _BOT_NAME: str = "testerheld"
 _LOG_MODE: LogMode = LogMode.INFO
 
 _PRODUCER: ProducerName = ProducerName.WEBSOCKET
-_STRATEGY: StrategyName = StrategyName.DEFAULT_RANDOM_STRATEGY
+_STRATEGY: str = StrategyName.DEFAULT_RANDOM_STRATEGY.value
 _EXECUTION_MODE: ExecutionMode = ExecutionMode.PAPER
 
 
