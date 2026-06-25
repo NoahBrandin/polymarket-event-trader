@@ -1,13 +1,11 @@
 import importlib
-import re
-from typing import Dict, TypeVar, Any
-
+from typing import Any, TypeVar
 
 from pm_bot.configuration.config import BotConfig
 from pm_bot.configuration.logger_config import get_logger
 from pm_bot.consumers.execution.bass import Execution
 from pm_bot.consumers.strategy.base import Strategy
-from pm_bot.locel_types import ExecutionMode, StrategyName, ProducerName, camel_to_snake
+from pm_bot.locel_types import ExecutionMode, ProducerName, StrategyName, camel_to_snake
 from pm_bot.producer.base import Producer
 
 logger = get_logger()
@@ -86,7 +84,7 @@ def _create_producer(producer_name) -> T:
         raise ValueError(f"producer_name {producer_name} not supported")
 
 
-def get_components(config: BotConfig) -> Dict:
+def get_components(config: BotConfig) -> dict:
     execution = _create_execution(config.execution_mode)
     strategy = _create_strategy(config.strategy_name)
     producer = _create_producer(config.producer_name)

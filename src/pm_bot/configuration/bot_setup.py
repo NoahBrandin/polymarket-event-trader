@@ -1,12 +1,12 @@
 import asyncio
 import signal
 
-from pm_bot.configuration import logger_config, factory
+from pm_bot.configuration import factory, logger_config
 from pm_bot.configuration.config import BotConfig
 from pm_bot.consumers.execution.bass import Execution
 from pm_bot.consumers.strategy.base import Strategy
-from pm_bot.locel_types import StrategyName, ProducerName, ExecutionMode, LogMode
-from pm_bot.pipeline.engine import EngineConfig, Engine, EngineStats
+from pm_bot.locel_types import ExecutionMode, LogMode, ProducerName, StrategyName
+from pm_bot.pipeline.engine import Engine, EngineConfig, EngineStats
 from pm_bot.producer.base import Producer
 
 
@@ -16,7 +16,6 @@ def setup(log_mode: LogMode = LogMode.INFO,
           producer: ProducerName = ProducerName.WEBSOCKET,
           strategy: StrategyName = StrategyName.DEFAULT_RANDOM_STRATEGY,
           engine_queue_size: int = 5000,
-          engine_print_events: bool = True,
 
           testing_setup: bool = False,
           ):
@@ -40,21 +39,20 @@ def setup(log_mode: LogMode = LogMode.INFO,
 
     logger.info("Starting Engine")
     try:
-        stats = asyncio.run(
+        asyncio.run(
             _async_start(
                 producer=producer,
                 strategy=strategy,
                 execution=execution,
                 config=EngineConfig(
                     queue_size=engine_queue_size,
-                    print_events=engine_print_events,
                     testing=testing_setup
                 ),
             )
         )
-        logger.debug(f"Engine run-methode stopped")
+        logger.debug("Engine run-methode stopped")
     except KeyboardInterrupt:
-        logger.warning(f"Bot shutdown by user")
+        logger.warning("Bot shutdown by user")
         report = execution.report()
         if report is not None:
             logger.info(f"Execution report: available_cash={report.available_cash} "

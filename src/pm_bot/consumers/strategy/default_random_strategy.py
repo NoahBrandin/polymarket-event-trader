@@ -2,9 +2,9 @@ import random
 from decimal import Decimal
 
 from pm_bot.configuration.selection import SubscriptionSelection
-from pm_bot.configuration.trading import StrategyDecision, ExecutionReport, OrderIntent
+from pm_bot.configuration.trading import ExecutionReport, OrderIntent, StrategyDecision
 from pm_bot.consumers.strategy.base import Strategy, StrategyConfig
-from pm_bot.locel_types import StrategyName, StrategyType, ProducerDataType, TradingSide
+from pm_bot.locel_types import ProducerDataType, StrategyName, StrategyType, TradingSide
 from pm_bot.pipeline.events import EventEnvelope, MarketUpdatePayload
 
 

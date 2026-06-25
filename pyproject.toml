@@ -1,16 +1,57 @@
-[tool.pytest.ini_options]
-# Fügt das 'src'-Verzeichnis zum Python-Pfad hinzu, damit pytest Module wie 'polymarket_interfaces' findet
-pythonpath = ["src"]
-testpaths = ["src/tests"]
-python_files = ["test_*.py", "*_test.py"]
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "polymarket-event-trader"
 version = "0.1.0"
-description = "Ein Paper- und Live-Trading-Bot für Polymarket-Events."
-readme = "README.md"
-requires-python = ">=3.10"
+description = "Event-driven paper and live trading framework for Polymarket."
+requires-python = ">=3.11"
 dependencies = [
-    "requests>=2.31.0",
-    "pytest>=7.0.0",
+    "httpx>=0.27,<1.0",
+    "websockets>=15,<17",
+    "websocket-client>=1.8,<2.0",
 ]
+
+[project.optional-dependencies]
+live = [
+    "py-clob-client-v2>=1.0.1,<2.0",
+]
+dev = [
+    "pytest>=8.4,<10",
+    "pytest-asyncio>=1.1,<2",
+    "ruff>=0.12,<1",
+]
+[project.scripts]
+polymarket-event-trader = "main:main"
+
+[project.urls]
+Repository = "https://github.com/NoahBrandin/polymarket-event-trader"
+Issues = "https://github.com/NoahBrandin/polymarket-event-trader/issues"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+py-modules = ["main"]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["pm_bot*", "polymarket_interfaces*"]
+exclude = ["tests*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["src/tests"]
+python_files = ["test_*.py", "*_test.py"]
+asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "function"
+asyncio_default_test_loop_scope = "function"
+addopts = ["-ra", "--strict-markers"]
+
+[tool.ruff]
+src = ["src"]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC"]

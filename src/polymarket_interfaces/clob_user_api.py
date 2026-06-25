@@ -17,20 +17,20 @@ import os
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from decimal import Decimal, InvalidOperation
-from enum import Enum
+from enum import StrEnum
 from types import SimpleNamespace
 from typing import Any
 
 from pm_bot.locel_types import TimeInForce
+
 from .clob_market_api import CLOB_API_BASE, ClobSide
 from .utils.utils import ApiType, ErrorCode, PolymarketError, RateLimiter, UnifiedCache
-
 
 POLYGON_CHAIN_ID = 137
 _ALLOWED_TICK_SIZES = {"0.1", "0.01", "0.001", "0.0001"}
 
 
-class ClobAssetType(str, Enum):
+class ClobAssetType(StrEnum):
     """Asset-Klassen für Balance- und Allowance-Abfragen."""
 
     COLLATERAL = "COLLATERAL"
@@ -216,7 +216,7 @@ class ClobUserAPI:
         private_key_env: str = "POLYMARKET_PRIVATE_KEY",
         allow_live_trading: bool = False,
         **kwargs: Any,
-    ) -> "ClobUserAPI":
+    ) -> ClobUserAPI:
         """Erzeugt den Client aus Umgebungsvariablen.
 
         Für den Private Key wird zusätzlich ``PK`` als offizieller SDK-Fallback
@@ -252,7 +252,7 @@ class ClobUserAPI:
             **kwargs,
         )
 
-    async def __aenter__(self) -> "ClobUserAPI":
+    async def __aenter__(self) -> ClobUserAPI:
         return self
 
     async def __aexit__(self, *exc_info: object) -> None:

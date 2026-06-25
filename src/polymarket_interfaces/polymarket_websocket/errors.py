@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 
 
-class WebSocketErrorCode(str, Enum):
+class WebSocketErrorCode(StrEnum):
     """
     Normalisierte WebSocket-Fehler.
 

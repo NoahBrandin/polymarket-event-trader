@@ -1,12 +1,11 @@
+from collections.abc import Mapping
 from dataclasses import dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime
 from decimal import Decimal
-from typing import Mapping, Any
-from uuid import uuid4
-
+from typing import Any
 
 from pm_bot.configuration.selection import SubscriptionSelection
-from pm_bot.locel_types import TradingSide, TimeInForce, OrderStatus
+from pm_bot.locel_types import OrderStatus, TimeInForce, TradingSide
 
 
 @dataclass(slots=True, frozen=True)

@@ -1,6 +1,8 @@
 import logging
 import logging.handlers
+from datetime import datetime
 from enum import Enum
+
 from pm_bot.locel_types import LogMode
 
 _logger_instance = None
@@ -9,16 +11,19 @@ class LogProfils(Enum):
     DEBUG = {
         "cli_level": logging.WARNING,     # Im Dev-Modus wollen wir ALLES im Terminal sehen
         "file_level": logging.DEBUG,
+        "remember_run": "NO",
         "msg": "Entwicklungs-Modus: Volles Logging im Terminal und in Datei."
     }
     INFO = {
         "cli_level": logging.WARNING,   # In Prod nur Warnungen/Fehler im Terminal
         "file_level": logging.INFO,     # Aber detaillierte Infos in der Datei
+        "remember_run": "NO",
         "msg": "Produktions-Modus: Terminal geschont, Datei loggt ab INFO."
     }
     ERROR = {
         "cli_level": logging.CRITICAL,  # Fast keine Ausgabe im Terminal
         "file_level": logging.WARNING,   # Nur wichtige Fehler in der Datei
+        "remember_run": "NO",
         "msg": "Silent-Modus: Minimale Log-Einträge."
     }
 
@@ -32,21 +37,31 @@ class LogProfils(Enum):
         return self.value["file_level"]
 
     @property
+    def remember_run(self) -> int | str:
+        return self.value["remember_run"]
+
+    @property
     def msg(self) -> int | str:
         return self.value["msg"]
+
+
 
 def setup_global_logger(mode: LogMode):
 
     profile = LogProfils[mode.value]
 
-    log_file = "trading_bot.log"
+    if profile.remember_run == "YES":
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        log_file = f"logs/{mode.value}_[{timestamp}].log"
+    else:
+        log_file = "logs/AA_test.log"
 
     # Formatierer
     file_formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] [%(filename)s:%(lineno)d] -> %(message)s')
     cli_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', datefmt='%H:%M:%S')
 
     # Handler mit profil-spezifischen Levels
-    file_handler = logging.FileHandler("trading_bot.log", mode="w", encoding="utf-8",)
+    file_handler = logging.FileHandler(log_file, mode="w", encoding="utf-8",)
     file_handler.setFormatter(file_formatter)
     file_handler.setLevel(logging.DEBUG)  # Schreibt alles ab DEBUG in die Datei
 

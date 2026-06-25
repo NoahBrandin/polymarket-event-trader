@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from pm_bot.configuration.logger_config import get_logger
 from pm_bot.locel_types import get_str_enum_from_value, get_unix_time_millis_to_datetime
-from pm_bot.pipeline.events import EventEnvelope, EventType, AssetUpdatePayload, MarketUpdatePayload, ErrorPayload
+from pm_bot.pipeline.events import AssetUpdatePayload, ErrorPayload, EventType, MarketUpdatePayload
 
 logger = get_logger()
 
 
-def parse_market_ws_message(data: Dict[str, Any]) -> Any:
+def parse_market_ws_message(data: dict[str, Any]) -> Any:
     """
     Parse a raw WS JSON message into a normalized structure for the bot.
 
@@ -42,7 +42,7 @@ def parse_market_ws_message(data: Dict[str, Any]) -> Any:
                                        timestamp=timestamp, asset_events = asset_event)
         except Exception as e:
             logger.error(f"Initialization of price_change asset_events failed: {e}")
-            return ErrorPayload(message=f"Initialization of price_change asset_events failed", details=e)
+            return ErrorPayload(message="Initialization of price_change asset_events failed", details=e)
 
     price = data.get("price")
     if price is not None:

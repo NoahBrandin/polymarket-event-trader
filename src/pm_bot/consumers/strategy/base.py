@@ -2,11 +2,11 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 from pm_bot.configuration.selection import SubscriptionSelection
-from pm_bot.configuration.trading import StrategyDecision, ExecutionReport
-from pm_bot.locel_types import StrategyName, StrategyType, ProducerDataType
+from pm_bot.configuration.trading import ExecutionReport, StrategyDecision
+from pm_bot.consumers.execution.utils.account_interface import AccountInterface
+from pm_bot.locel_types import ProducerDataType, StrategyName, StrategyType
 from pm_bot.pipeline.events import EventEnvelope
 
-from pm_bot.consumers.execution.utils.account_interface import AccountInterface
 
 @dataclass(frozen=True)
 class StrategyConfig:

@@ -5,7 +5,6 @@ from decimal import Decimal
 
 import httpx
 
-from polymarket_interfaces.utils.utils import ErrorCode, PolymarketError
 from polymarket_interfaces.data_api import (
     ActivityQuery,
     DataAPI,
@@ -13,6 +12,7 @@ from polymarket_interfaces.data_api import (
     TradeFilterType,
     TradeQuery,
 )
+from polymarket_interfaces.utils.utils import ErrorCode, PolymarketError
 
 USER = "0x56687bf447db6ffa42ffe2204a05edaa20f55839"
 MARKET = "0x" + "a" * 64

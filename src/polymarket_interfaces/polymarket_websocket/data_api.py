@@ -9,8 +9,8 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import UTC, datetime
+from enum import Enum, StrEnum
 from typing import Any
 
 import httpx
@@ -20,14 +20,14 @@ from .gamma_api import ApiType, ErrorCode, PolymarketError, RateLimiter
 DATA_API_BASE = "https://data-api.polymarket.com"
 
 
-class SortDirection(str, Enum):
+class SortDirection(StrEnum):
     """Sortierrichtung der Data-API-Endpunkte."""
 
     ASC = "ASC"
     DESC = "DESC"
 
 
-class PositionSortBy(str, Enum):
+class PositionSortBy(StrEnum):
     """Zulässige Sortierfelder für offene Positionen."""
 
     CURRENT = "CURRENT"
@@ -40,7 +40,7 @@ class PositionSortBy(str, Enum):
     AVGPRICE = "AVGPRICE"
 
 
-class ClosedPositionSortBy(str, Enum):
+class ClosedPositionSortBy(StrEnum):
     """Zulässige Sortierfelder für geschlossene Positionen."""
 
     REALIZEDPNL = "REALIZEDPNL"
@@ -252,7 +252,7 @@ class DataApiClient:
             headers={"Accept": "application/json"},
         )
 
-    async def __aenter__(self) -> "DataApiClient":
+    async def __aenter__(self) -> DataApiClient:
         return self
 
     async def __aexit__(self, *exc_info: object) -> None:
@@ -717,7 +717,7 @@ def _parse_optional_datetime(value: Any) -> datetime | None:
         return None
     text = str(value).strip()
     if text.isdigit():
-        return datetime.fromtimestamp(int(text), tz=timezone.utc)
+        return datetime.fromtimestamp(int(text), tz=UTC)
     if text.endswith("Z"):
         text = f"{text[:-1]}+00:00"
     try:
@@ -725,5 +725,5 @@ def _parse_optional_datetime(value: Any) -> datetime | None:
     except ValueError:
         return None
     if parsed.tzinfo is None:
-        parsed = parsed.replace(tzinfo=timezone.utc)
+        parsed = parsed.replace(tzinfo=UTC)
     return parsed

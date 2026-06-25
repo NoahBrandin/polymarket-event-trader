@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 """
 Komponenten- und Integrationstests für polymarket-event-trader.
 
@@ -21,14 +23,12 @@ import asyncio
 import importlib
 import inspect
 import json
+from collections.abc import Iterable
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from types import SimpleNamespace
-from typing import Any, Iterable
-
-import pytest
-
+from typing import Any
 
 # ---------------------------------------------------------------------------
 # Import-Helfer
@@ -143,7 +143,7 @@ OrderStatus = _attribute(
 # Gemeinsame Fixtures und Konstruktor-Helfer
 # ---------------------------------------------------------------------------
 
-NOW = datetime.now(timezone.utc)
+NOW = datetime.now(UTC)
 
 
 def _enum_member(enum_type: Any, *names: str) -> Any:

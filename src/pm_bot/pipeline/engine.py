@@ -1,19 +1,17 @@
 import asyncio
+from collections.abc import Callable
 from contextlib import suppress
-from datetime import datetime, timezone
 from dataclasses import dataclass
-from typing import Callable
-
-import sys
+from datetime import UTC, datetime
 
 from pm_bot.configuration.logger_config import get_logger
 from pm_bot.configuration.selection import SubscriptionSelection
 from pm_bot.configuration.trading import StrategyDecision
 from pm_bot.consumers.execution.bass import Execution
 from pm_bot.consumers.strategy.base import Strategy
-from pm_bot.locel_types import StrategyName, ExecutionMode
+from pm_bot.locel_types import ExecutionMode, StrategyName
 from pm_bot.pipeline.events import EventEnvelope, EventType
-from pm_bot.pipeline.queue import EventQueueStats, EventQueue
+from pm_bot.pipeline.queue import EventQueue, EventQueueStats
 from pm_bot.producer.base import Producer
 
 logger = get_logger()
@@ -35,9 +33,9 @@ class EngineConfig:
 
     tick_hz: int = 60 #schläge die Sekunde
 
-    print_lifecycle: bool = True
-    print_events: bool = True
-    print_execution: bool = True
+    log_lifecycle: bool = True
+    log_events: bool = True
+    log_execution: bool = True
     stop_on_producer_error: bool = True
     stop_on_strategy_error: bool = True
     stop_on_execution_error: bool = True
@@ -71,7 +69,7 @@ class Engine:
 
         self.event_handler:Callable[[EventEnvelope], None] | None = None
         self._producer_task = None
-        self.event_queue = EventQueue()
+        self.event_queue = EventQueue(maxsize=config.queue_size)
 
     async def run(self) -> EngineStats:
         """
@@ -79,7 +77,7 @@ class Engine:
         herunterfahren. Fehlerzähler bleiben auch bei abgefangenen Fehlern erhalten.
         """
         if self._running:
-            logger.error(f"Engine.run() is already running")
+            logger.error("Engine.run() is already running")
             raise RuntimeError("Die Engine läuft bereits")
 
         self._running = True
@@ -90,6 +88,7 @@ class Engine:
 
         try:
             await self._start()
+            await self.execution.start()
 
             if not self._stopping:
                 self._producer_task = asyncio.create_task(
@@ -98,36 +97,32 @@ class Engine:
                     )
 
                 await self._consume_until_producers_finish() # Start main_loop
-        except SystemExit as error:
-            raise
         except Exception as error:
             logger.error(f"Engine.run() is failed with error: {error}")
-            raise Exception(f"Engine.run() is failed with error: {error}")
+            self._stopping = True
 
         finally:
             if self._stopping:
-                logger.info(f"Initiating GRACEFUL shutdown...")
+                logger.info("Initiating GRACEFUL shutdown...")
             else:
-                logger.info(f"Initiating shutdown...")
+                logger.info("Initiating shutdown...")
 
             await self._shutdown_producer()
-            logger.debug(f"Producer shut down")
+            logger.debug("Producer shut down")
             if self.strategy is not None:
                 try:
                     await self.strategy.on_stop()
                 except Exception as error:
                     logger.error(f"Strategy stop failed: {error}")
-                    raise Exception(f"Strategy stop failed: {error}")
 
             if self.execution is not None:
                 try:
-                    await self.execution.stop()
+                    await self.execution.on_stop()
                 except Exception as error:
                     logger.error(f"Execution stop failed: {error}")
-                    raise Exception(f"Execution-Stop fehlgeschlagen: {error}")
 
             self._running = False
-            logger.info(f"Engine.run() is stopped")
+            logger.info("Engine.run() is stopped")
 
         return self.stats
 
@@ -148,7 +143,7 @@ class Engine:
                 await self.strategy.add_account_interface(self.execution.account_interface)
                 if initial_decision is not None:
                     try:
-                        report = await self._execution_handel_decisions(initial_decision)
+                        await self._execution_handel_decisions(initial_decision)
                     except Exception as error:
                         logger.error(f"Execution-Start fehlgeschlagen: {error}")
                         raise Exception(f"Execution-Start fehlgeschlagen: {error}")
@@ -195,7 +190,7 @@ class Engine:
                     pass
                 except Exception as error:
                     logger.error(f"Producer_task failed unexpectedly: {error}")
-                    raise Exception(f"Producer-Task unerwartet fehlgeschlagen: {error}")
+                    if self.config.stop_on_producer_error: raise Exception(f"Producer-Task unerwartet fehlgeschlagen: {error}")
 
             if queue_get in done: #Bearbeite task aus queue
                 message = queue_get.result()
@@ -208,16 +203,16 @@ class Engine:
                 queue_get.cancel()
                 await asyncio.gather(queue_get, return_exceptions=True)
 
-
     async def _process_message(self, envelope: EventEnvelope) -> None:
         """
         Event-Pipeline: WebSocket-Marktdaten aktualisieren zusätzlich State und
         Execution; API-Daten werden direkt an Handler und Strategie weitergereicht.
         """
-        object.__setattr__(envelope, "received_at", datetime.now(timezone.utc)) #sehr vorsichtig umgeht (frozen=True) bei EventEnvelop ist aber schneller als replcat()
+        object.__setattr__(envelope, "received_at", datetime.now(UTC)) #sehr vorsichtig umgeht (frozen=True) bei EventEnvelop ist aber schneller als replcat()
         object.__setattr__(envelope, "sequence", self._processed_events)
 
-        logger.info(f"Event: {envelope}")
+        if self.config.log_events:
+            logger.info(f"Event: {envelope}")
 
         if envelope.event_type == EventType.ERROR or envelope.event_type == EventType.HEARTBEAT: # Error wird nicht bearbeite (später vilt mit risk_manger)
             return
@@ -257,9 +252,10 @@ class Engine:
             if decision is None: return None
         except Exception as error:
             logger.error(f"Strategy handling of event failed: {error}")
-            raise Exception(f"Strategie-Verarbeitung eines Marktevents fehlgeschlagen: {error}")
+            if self.config.stop_on_strategy_error: raise Exception(f"Strategie-Verarbeitung eines Marktevents fehlgeschlagen: {error}")
+            else: return None
 
-        logger.info(f"Decision: {decision}")
+        logger.debug(f"Decision: {decision}")
         return decision
 
     async def _execution_handel_decisions(self, decision:StrategyDecision) -> None:
@@ -268,20 +264,24 @@ class Engine:
 
         for order in decision.orders:
             self._submitted_orders += 1
-            logger.debug(f"Submitted order: {order}")
+            logger.info(f"Order: {order}")
             try:
                 report = await self.execution.execute(order)
             except Exception as error:
                 logger.error(f"Execution order-submission failed unexpectedly: {error}")
-                raise Exception(f"Execution Oder-Bearbeitung fehlgeschlagen: {error}")
+                if self.config.stop_on_execution_error: raise Exception(f"Execution order-submission failed unexpectedly: {error}")
+                else: continue
 
             self._execution_reports += 1
-            logger.info(f"Executed order report: {report}")
+            if self.config.log_execution:
+                logger.info(f"Executed order report: {report}")
+
+            await self.strategy.on_execution(report)
 
     async def _apply_subscription_selection(self, selection: SubscriptionSelection) -> None:
         await self.producer.set_subscription_selection(selection)
         self._selection_updates += 1
-        if self.config.print_lifecycle:
+        if self.config.log_execution:
             logger.info(f"[MARKET SELECTION] ids={sorted(selection.ids)}")
 
     async def _shutdown_producer(self) -> None:

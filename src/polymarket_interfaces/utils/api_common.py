@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Awaitable, Callable, Mapping
-from enum import Enum
+from enum import StrEnum
 from typing import Any, Protocol, TypeVar
 
 T = TypeVar("T")
 
 
-class ErrorCode(str, Enum):
+class ErrorCode(StrEnum):
     """Stabile Fehlercodes für öffentliche Polymarket-API-Aufrufe."""
 
     NETWORK_ERROR = "NETWORK_ERROR"
@@ -40,7 +40,7 @@ class PolymarketError(Exception):
         self.original_error = original_error
 
     @classmethod
-    def from_http_error(cls, status: int, body: Any = None) -> "PolymarketError":
+    def from_http_error(cls, status: int, body: Any = None) -> PolymarketError:
         body_message = ""
         if isinstance(body, Mapping):
             candidate = body.get("message") or body.get("error")
@@ -76,7 +76,7 @@ class PolymarketError(Exception):
         )
 
 
-class ApiType(str, Enum):
+class ApiType(StrEnum):
     """Kennzeichnet den durch den RateLimiter gesteuerten API-Typ."""
 
     GAMMA_API = "gamma-api"

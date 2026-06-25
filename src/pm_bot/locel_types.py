@@ -1,8 +1,8 @@
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
-from enum import Enum, StrEnum
-from typing import TypeVar, Type
+from enum import StrEnum
+from typing import TypeVar
 
 E = TypeVar("E", bound=StrEnum)
 
@@ -16,9 +16,9 @@ def camel_to_snake(text):
     return s2.lower()
 
 def get_unix_time_millis_to_datetime(tms: float) -> datetime:
-    return datetime.fromtimestamp(tms/1000.0, tz=timezone.utc)
+    return datetime.fromtimestamp(tms/1000.0, tz=UTC)
 
-def get_str_enum_from_value(value: str, enum_class: Type[E]) -> E:
+def get_str_enum_from_value(value: str, enum_class: type[E]) -> E:
     """Sucht ein Enum-Mitglied basierend auf seinem zugewiesenen Wert."""
     return enum_class(value)
 
@@ -76,20 +76,20 @@ class SelectionType(StrEnum):
 
 # --- Trading ---
 
-class TradingSide(str, Enum):
+class TradingSide(StrEnum):
     """Beschreibt die brokerunabhängige Kauf- oder Verkaufsrichtung einer Order."""
     BUY = "BUY"
     SELL = "SELL"
 
 
-class TimeInForce(str, Enum):
+class TimeInForce(StrEnum):
     GTC = "GTC"
     GTD = "GTD"
     FOK = "FOK"
     FAK = "FAK"
 
 
-class OrderStatus(str, Enum):
+class OrderStatus(StrEnum):
     LIVE = "LIVE"
     FILLED = "FILLED"
     PARTIALLY_FILLED = "PARTIALLY_FILLED"

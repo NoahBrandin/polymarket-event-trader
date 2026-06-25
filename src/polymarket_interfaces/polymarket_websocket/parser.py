@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Mapping, Sequence
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal, InvalidOperation
 from typing import Any
 
@@ -249,7 +249,7 @@ def _parse_timestamp(value: Any) -> datetime | None:
                 parsed = datetime.fromisoformat(iso)
             except ValueError:
                 return None
-            return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+            return parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
     else:
         text = str(value)
 
@@ -261,7 +261,7 @@ def _parse_timestamp(value: Any) -> datetime | None:
     # WebSocket-Beispiele enthalten sowohl Unix-Sekunden als auch Millisekunden.
     seconds = numeric / Decimal(1000) if abs(numeric) >= Decimal("100000000000") else numeric
     try:
-        return datetime.fromtimestamp(float(seconds), tz=timezone.utc)
+        return datetime.fromtimestamp(float(seconds), tz=UTC)
     except (OverflowError, OSError, ValueError):
         return None
 

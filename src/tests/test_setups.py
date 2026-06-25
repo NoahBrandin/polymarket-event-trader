@@ -1,5 +1,5 @@
 from pm_bot.configuration.bot_setup import setup
-from pm_bot.locel_types import LogMode, ProducerDataType, ProducerName, StrategyType, StrategyName, ExecutionMode
+from pm_bot.locel_types import ExecutionMode, LogMode, ProducerName, StrategyName
 
 
 def test_websocket_none_none():

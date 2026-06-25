@@ -14,7 +14,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from decimal import Decimal, InvalidOperation
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 import httpx
@@ -27,18 +27,17 @@ from .utils.utils import (
     UnifiedCache,
 )
 
-
 CLOB_API_BASE = "https://clob.polymarket.com"
 INITIAL_CURSOR = "MA=="
 
 
-class ClobSide(str, Enum):
+class ClobSide(StrEnum):
     """Handelsseite im Query- und Payload-Format der CLOB API."""
     BUY = "BUY"
     SELL = "SELL"
 
 
-class PriceHistoryInterval(str, Enum):
+class PriceHistoryInterval(StrEnum):
     """Von den REST-History-Endpunkten unterstützte Zeiträume."""
     MAX = "max"
     ALL = "all"
@@ -286,7 +285,7 @@ class ClobMarketAPI:
             headers={"Accept": "application/json"},
         )
 
-    async def __aenter__(self) -> "ClobMarketAPI":
+    async def __aenter__(self) -> ClobMarketAPI:
         return self
 
     async def __aexit__(self, *exc_info: object) -> None:

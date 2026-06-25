@@ -9,11 +9,11 @@ import pytest
 from polymarket_interfaces.clob_market_api import ClobSide
 from polymarket_interfaces.clob_user_api import (
     CLOBApiCredentials,
-    ClobUserAPI,
     ClobAssetType,
-    TimeInForce,
+    ClobUserAPI,
     LimitOrderRequest,
     MarketOrderRequest,
+    TimeInForce,
 )
 from polymarket_interfaces.utils.utils import ErrorCode, PolymarketError
 

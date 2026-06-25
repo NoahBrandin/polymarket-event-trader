@@ -9,9 +9,9 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal, InvalidOperation
-from enum import Enum
+from enum import Enum, StrEnum
 from typing import Any
 
 import httpx
@@ -25,12 +25,12 @@ _CONDITION_PATTERN = re.compile(r"^0x[a-fA-F0-9]{64}$")
 _ZERO = Decimal("0")
 
 
-class SortDirection(str, Enum):
+class SortDirection(StrEnum):
     ASC = "ASC"
     DESC = "DESC"
 
 
-class PositionSortBy(str, Enum):
+class PositionSortBy(StrEnum):
     CURRENT = "CURRENT"
     INITIAL = "INITIAL"
     TOKENS = "TOKENS"
@@ -42,7 +42,7 @@ class PositionSortBy(str, Enum):
     AVG_PRICE = "AVGPRICE"
 
 
-class ClosedPositionSortBy(str, Enum):
+class ClosedPositionSortBy(StrEnum):
     REALIZED_PNL = "REALIZEDPNL"
     TITLE = "TITLE"
     PRICE = "PRICE"
@@ -50,17 +50,17 @@ class ClosedPositionSortBy(str, Enum):
     TIMESTAMP = "TIMESTAMP"
 
 
-class TradeSide(str, Enum):
+class TradeSide(StrEnum):
     BUY = "BUY"
     SELL = "SELL"
 
 
-class TradeFilterType(str, Enum):
+class TradeFilterType(StrEnum):
     CASH = "CASH"
     TOKENS = "TOKENS"
 
 
-class ActivityType(str, Enum):
+class ActivityType(StrEnum):
     TRADE = "TRADE"
     SPLIT = "SPLIT"
     MERGE = "MERGE"
@@ -72,7 +72,7 @@ class ActivityType(str, Enum):
     REFERRAL_REWARD = "REFERRAL_REWARD"
 
 
-class ActivitySortBy(str, Enum):
+class ActivitySortBy(StrEnum):
     TIMESTAMP = "TIMESTAMP"
     TOKENS = "TOKENS"
     CASH = "CASH"
@@ -258,7 +258,7 @@ class DataAPI:
             headers={"Accept": "application/json"},
         )
 
-    async def __aenter__(self) -> "DataAPI":
+    async def __aenter__(self) -> DataAPI:
         return self
 
     async def __aexit__(self, *exc_info: object) -> None:
@@ -776,7 +776,7 @@ def _parse_epoch(value: Any) -> datetime | None:
     if value is None or value == "":
         return None
     try:
-        return datetime.fromtimestamp(float(value), tz=timezone.utc)
+        return datetime.fromtimestamp(float(value), tz=UTC)
     except (TypeError, ValueError, OSError, OverflowError):
         return None
 
@@ -792,7 +792,7 @@ def _parse_iso_datetime(value: Any) -> datetime | None:
     except ValueError:
         return None
     if parsed.tzinfo is None:
-        parsed = parsed.replace(tzinfo=timezone.utc)
+        parsed = parsed.replace(tzinfo=UTC)
     return parsed
 
 

@@ -1,10 +1,11 @@
 import asyncio
-from enum import Enum
-from typing import Any, Mapping, Protocol, Callable, Awaitable, TypeVar
+from collections.abc import Awaitable, Callable, Mapping
+from enum import StrEnum
+from typing import Any, Protocol, TypeVar
 
 T = TypeVar("T")
 
-class ErrorCode(str, Enum):
+class ErrorCode(StrEnum):
     """Definiert stabile Fehlercodes für Polymarket-API-Aufrufe."""
     NETWORK_ERROR = "NETWORK_ERROR"
     TIMEOUT = "TIMEOUT"
@@ -71,7 +72,7 @@ class PolymarketError(Exception):
         )
 
 
-class ApiType(str, Enum):
+class ApiType(StrEnum):
     """Kennzeichnet den durch den RateLimiter gesteuerten API-Typ."""
 
     GAMMA_API = "gamma-api"

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from pm_bot.locel_types import ExecutionMode, LogMode, StrategyName, ProducerName
+from pm_bot.locel_types import ExecutionMode, LogMode, ProducerName, StrategyName
 
 
 @dataclass(slots=True, frozen=True)

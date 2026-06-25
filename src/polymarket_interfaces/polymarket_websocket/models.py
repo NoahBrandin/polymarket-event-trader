@@ -6,11 +6,11 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 
-class ConnectionState(str, Enum):
+class ConnectionState(StrEnum):
     DISCONNECTED = "DISCONNECTED"
     CONNECTING = "CONNECTING"
     SUBSCRIBED = "SUBSCRIBED"
@@ -20,7 +20,7 @@ class ConnectionState(str, Enum):
     FAILED = "FAILED"
 
 
-class MarketEventType(str, Enum):
+class MarketEventType(StrEnum):
     """
     Typisierte Market-Channel-Modelle.
 
@@ -37,7 +37,7 @@ class MarketEventType(str, Enum):
     UNKNOWN = "unknown"
 
 
-class Side(str, Enum):
+class Side(StrEnum):
     BUY = "BUY"
     SELL = "SELL"
     UNKNOWN = "UNKNOWN"

@@ -1,21 +1,16 @@
 import asyncio
-from datetime import datetime
-from email import message
+import json
+from typing import Any
 
 import websockets
-from websocket import WebSocketApp
-import json
-import time
-from typing import Callable, Optional, Dict, Any
 
 from pm_bot.configuration.logger_config import get_logger
 from pm_bot.configuration.selection import SubscriptionSelection
-from pm_bot.locel_types import ProducerDataType, SelectionType, ProducerName
-from pm_bot.pipeline.events import EventEnvelope, EventType, HeartbeatPayload, ErrorPayload
+from pm_bot.locel_types import ProducerDataType, ProducerName, SelectionType
+from pm_bot.pipeline.events import ErrorPayload, EventEnvelope, HeartbeatPayload
 from pm_bot.pipeline.queue import EventQueue
 from pm_bot.producer.base import Producer, ProducerConfig
 from pm_bot.producer.utils.websocket_normalizer import parse_market_ws_message
-
 from polymarket_interfaces.gamma_api import GammaAPI
 
 URL  = "wss://ws-subscriptions-clob.polymarket.com"
@@ -75,6 +70,8 @@ class WebsocketFeed(Producer):
     async def set_subscription_selection(self, selection: SubscriptionSelection) -> None:
         self._subscription_selection = selection
 
+
+
     async def run(self, event_queue: EventQueue) -> None:
         """
         Das asynchrone Herzstück:
@@ -118,7 +115,7 @@ class WebsocketFeed(Producer):
 
             # Asynchrones, non-blocking Warten vor dem Wiederverbinden
             logger.info(f"Websocket disconnected. Reconnecting in {backoff}s...")
-            await self._emit_event(ErrorPayload(message="Websocket disconnected. Reconnecting in {backoff}s..."),
+            await self._emit_event(ErrorPayload(message=f"Websocket disconnected. Reconnecting in {backoff}s..."),
                                    queue=event_queue)
             await asyncio.sleep(backoff)
             backoff = min(backoff * 2, self.max_backoff_s)

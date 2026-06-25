@@ -1,9 +1,10 @@
-from datetime import datetime, UTC
-from dataclasses import dataclass, fields, field
+from dataclasses import dataclass, field, fields
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Any, Literal, Optional
+from typing import Any
 
 from pm_bot.locel_types import ProducerDataType
+
 
 class EventType(Enum):
     DEFAULT = "default"
@@ -44,7 +45,10 @@ class EventEnvelope:
 
     def __str__(self) -> str:
         def _format_time(value: datetime | None) -> str:
-            return "-" if value is None else value.isoformat()
+            try:
+                return "-" if value is None else value.isoformat()
+            except Exception:
+                raise
 
         return (
             f"[{self.event_type.name}] producer={self.producer_name} "
@@ -79,14 +83,16 @@ class BasePayload:
 @dataclass(slots=True, frozen=True, kw_only=True)
 class HeartbeatPayload(BasePayload):
     event_type = EventType.HEARTBEAT
-    timestamp = datetime
+    timestamp = datetime.now(UTC)
+
 
 @dataclass(slots=True, frozen=True, kw_only=True)
 class ErrorPayload(BasePayload):
     event_type = EventType.ERROR
     message: str
-    timestamp: datetime = datetime
-    details: Optional[Any]
+    timestamp: datetime = datetime.now(UTC)
+    details: Any | None
+
 
 @dataclass(slots=True, frozen=True, kw_only=True)
 class AssetUpdatePayload(BasePayload):

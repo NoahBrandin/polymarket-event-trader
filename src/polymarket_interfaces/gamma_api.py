@@ -13,9 +13,9 @@ Die Gamma API dient der Markt- und Event-Suche. Sie ist kein Trading-Client.
 from __future__ import annotations
 
 import json
-from collections.abc import  Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import httpx
@@ -131,7 +131,7 @@ class GammaAPI:
             headers={"Accept": "application/json"},
         )
 
-    async def __aenter__(self) -> "GammaAPI":
+    async def __aenter__(self) -> GammaAPI:
         return self
 
     async def __aexit__(self, *exc_info: object) -> None:
@@ -392,7 +392,7 @@ class GammaAPI:
             best_ask=_optional_float(market.get("bestAsk")),
             end_date=_parse_datetime(
                 market.get("endDate"),
-                fallback=datetime.now(timezone.utc),
+                fallback=datetime.now(UTC),
             ),
             created_at=_parse_optional_datetime(
                 market.get("createdAt")
@@ -535,7 +535,7 @@ def _parse_optional_datetime(value: Any) -> datetime | None:
         return None
 
     if parsed.tzinfo is None:
-        parsed = parsed.replace(tzinfo=timezone.utc)
+        parsed = parsed.replace(tzinfo=UTC)
 
     return parsed
 

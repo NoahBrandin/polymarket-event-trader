@@ -19,7 +19,6 @@ from .models import ConnectionState, MarketEventMessage, MarketEventType
 from .orderbook import OrderBookStore
 from .parser import MarketEventParser
 
-
 # ============================================================================
 # Verbindungsparameter und Callback-Typen
 # ============================================================================
@@ -136,14 +135,14 @@ class MarketWebSocketClient:
         self._connection_started_at: float | None = None
         self._last_error: PolymarketWebSocketError | None = None
 
-    async def __aenter__(self) -> "MarketWebSocketClient":
+    async def __aenter__(self) -> MarketWebSocketClient:
         await self.start()
         return self
 
     async def __aexit__(self, *exc_info: object) -> None:
         await self.close()
 
-    def __aiter__(self) -> "MarketWebSocketClient":
+    def __aiter__(self) -> MarketWebSocketClient:
         return self
 
     async def __anext__(self) -> MarketEventMessage:

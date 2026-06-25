@@ -2,10 +2,9 @@ import asyncio
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-
 from pm_bot.configuration.logger_config import get_logger
 from pm_bot.configuration.selection import SubscriptionSelection
-from pm_bot.locel_types import SelectionType, ProducerName, ProducerDataType
+from pm_bot.locel_types import ProducerDataType, ProducerName, SelectionType
 from pm_bot.pipeline.queue import EventQueue
 
 logger = get_logger()

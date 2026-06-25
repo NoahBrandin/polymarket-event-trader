@@ -5,21 +5,13 @@
 # ============================================================================
 # Bot-Komponenten importieren Polymarket-Typen über dieses Paket.
 
-from .utils.utils import (
-    ApiType,
-    ErrorCode,
-    PolymarketError,
-    RateLimiter,
-    UnifiedCache,
-)
-
 from .clob_market_api import (
     CLOB_API_BASE,
     INITIAL_CURSOR,
     BatchPriceHistoryParams,
     BookRequest,
-    ClobMarketAPI,
     ClobMarket,
+    ClobMarketAPI,
     ClobMarketPage,
     ClobMarketToken,
     ClobOrderBookLevel,
@@ -31,7 +23,6 @@ from .clob_market_api import (
     PricePoint,
     PriceQuote,
 )
-
 from .data_api import (
     DATA_API_BASE,
     Activity,
@@ -52,7 +43,6 @@ from .data_api import (
     TradeQuery,
     TradeSide,
 )
-
 from .gamma_api import (
     GAMMA_API_BASE,
     ApiType,
@@ -91,6 +81,13 @@ from .polymarket_websocket import (
     TickSizeChangeEvent,
     UnknownMarketEvent,
     WebSocketErrorCode,
+)
+from .utils.utils import (
+    ApiType,
+    ErrorCode,
+    PolymarketError,
+    RateLimiter,
+    UnifiedCache,
 )
 
 __all__ = [
