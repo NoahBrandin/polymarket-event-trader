@@ -2,10 +2,13 @@ import logging
 import logging.handlers
 from datetime import datetime
 from enum import Enum
+from pathlib import Path
 
 from pm_bot.locel_types import LogMode
 
 _logger_instance = None
+
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 class LogProfils(Enum):
     DEBUG = {
@@ -56,12 +59,15 @@ def setup_global_logger(mode: LogMode):
     else:
         log_file = "logs/AA_test.log"
 
+    log_path = Path(PROJECT_ROOT / log_file)
+    log_path.parent.mkdir(parents=True,exist_ok=True,)
+
     # Formatierer
     file_formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] [%(filename)s:%(lineno)d] -> %(message)s')
     cli_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', datefmt='%H:%M:%S')
 
     # Handler mit profil-spezifischen Levels
-    file_handler = logging.FileHandler(log_file, mode="w", encoding="utf-8",)
+    file_handler = logging.FileHandler(log_path, mode="w", encoding="utf-8",)
     file_handler.setFormatter(file_formatter)
     file_handler.setLevel(logging.DEBUG)  # Schreibt alles ab DEBUG in die Datei
 

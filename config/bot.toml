@@ -1,0 +1,16 @@
+[bot]
+name = "testerheld"
+
+# Es werden sowohl Enum-Namen als auch Enum-Werte akzeptiert.
+# Beispiele: "INFO", "WEBSOCKET", "DEFAULT_RANDOM_STRATEGY", "PAPER"
+log_mode = "INFO"
+producer = "WEBSOCKET"
+strategy = "DEFAULT_RANDOM_STRATEGY"
+execution_mode = "PAPER"
+
+[engine]
+queue_size = 5000
+print_events = true
+
+# Nur für automatisierte Tests aktivieren.
+testing = false

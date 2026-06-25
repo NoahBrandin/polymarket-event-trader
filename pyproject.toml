@@ -29,11 +29,6 @@ polymarket-event-trader = "main:main"
 Repository = "https://github.com/NoahBrandin/polymarket-event-trader"
 Issues = "https://github.com/NoahBrandin/polymarket-event-trader/issues"
 
-[tool.setuptools]
-package-dir = { "" = "src" }
-py-modules = ["main"]
-include-package-data = true
-
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["pm_bot*", "polymarket_interfaces*"]
