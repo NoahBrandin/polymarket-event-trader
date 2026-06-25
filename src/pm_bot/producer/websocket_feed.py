@@ -8,22 +8,21 @@ import json
 import time
 from typing import Callable, Optional, Dict, Any
 
-from src.pm_bot.configuration.logger_config import get_logger
-from src.pm_bot.configuration.selection import SubscriptionSelection
-from src.pm_bot.locel_types import ProducerDataType, SourceMode, SelectionType, ProducerName
-from src.pm_bot.pipeline.events import EventEnvelope, EventType, HeartbeatPayload, ErrorPayload
-from src.pm_bot.pipeline.queue import EventQueue
-from src.pm_bot.producer.base import Producer, ProducerConfig
-from src.pm_bot.producer.utils.websocket_normalizer import parse_market_ws_message
+from pm_bot.configuration.logger_config import get_logger
+from pm_bot.configuration.selection import SubscriptionSelection
+from pm_bot.locel_types import ProducerDataType, SelectionType, ProducerName
+from pm_bot.pipeline.events import EventEnvelope, EventType, HeartbeatPayload, ErrorPayload
+from pm_bot.pipeline.queue import EventQueue
+from pm_bot.producer.base import Producer, ProducerConfig
+from pm_bot.producer.utils.websocket_normalizer import parse_market_ws_message
 
-from src.polymarket_interfaces.gamma_api import GammaAPI
+from polymarket_interfaces.gamma_api import GammaAPI
 
 URL  = "wss://ws-subscriptions-clob.polymarket.com"
 
 config = ProducerConfig(
     name=ProducerName.WEBSOCKET,
     type= ProducerDataType.WEBSOCKET,
-    source_mode= SourceMode.LIVE,
     selection_type= SelectionType.MARKT_EVENT,
 )
 
@@ -50,7 +49,7 @@ class WebsocketFeed(Producer):
         self.reconnect_backoff_s:float = 1.0
         self.max_backoff_s:int = 30
 
-        self._ws: Optional[WebSocketApp] = None
+        self._ws = None
 
     async def _emit_event(self, payload: Any, queue: EventQueue) -> None:
         """Ersetzt deine _emit Methode, um die Daten an die Queue zu
@@ -91,6 +90,7 @@ class WebsocketFeed(Producer):
 
                 # Verbindung asynchron öffnen
                 async with websockets.connect(furl) as ws:
+                    self._ws = ws
                     await self._on_open(ws)
                     # Reset Backoff bei erfolgreicher Verbindung
                     backoff = self.reconnect_backoff_s
@@ -99,11 +99,18 @@ class WebsocketFeed(Producer):
                             break
                         await self._on_message(message, event_queue)
 
-            except (websockets.exceptions.ConnectionClosed, Exception) as e:
-                logger.warning(f"Websocket-Verbindung verloren oder fehlgeschlagen: {e}")
-                # Entspricht deinem self._emit
-                await self._emit_event(ErrorPayload(details=e, message="Websocket-Connection failed"),
-                                       queue=event_queue)
+            except asyncio.CancelledError:
+                logger.debug("WebSocket producer task cancelled")
+                raise
+
+            except websockets.exceptions.ConnectionClosed as error:
+                logger.warning("WebSocket connection closed: %s", error)
+
+            except Exception as error:
+                logger.error(f"WebSocket producer failed whit: {error}")
+                raise Exception(f"WebSocket producer failed: {error}")
+            finally:
+                self._ws = None
 
             # Falls Stop angefordert wurde, schleife sofort beenden
             if self._stop_requested.is_set():
@@ -152,8 +159,20 @@ class WebsocketFeed(Producer):
         except Exception as e:
             await self._emit_event(ErrorPayload(details=e, message="Pushing Message into Queue failed"),
                                    queue=event_queue)
+        finally:
+            await self._on_stop()
 
     async def _on_stop(self) -> None:
         """Setzt das Stopp-Signal."""
-        logger.info("Websocket-Feed Stop angefordert...")
+        logger.debug("Websocket-Feed stopping")
+
+        # 1. Signal stop to other tasks
         self._stop_requested.set()
+
+        if self._ws is not None:
+            await self._ws.close(
+                code=1000,
+                reason="Application shutdown",
+            )
+
+        logger.debug(f"Websocket-Feed stopped set: ws={self._ws}")

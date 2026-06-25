@@ -6,8 +6,8 @@ import asyncio
 import logging
 from dataclasses import dataclass
 
-from src.pm_bot.configuration.logger_config import get_logger
-from src.pm_bot.pipeline.events import EventEnvelope
+from pm_bot.configuration.logger_config import get_logger
+from pm_bot.pipeline.events import EventEnvelope
 
 logger = get_logger()
 

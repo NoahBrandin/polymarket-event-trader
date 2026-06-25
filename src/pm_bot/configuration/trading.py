@@ -5,8 +5,8 @@ from typing import Mapping, Any
 from uuid import uuid4
 
 
-from src.pm_bot.configuration.selection import SubscriptionSelection
-from src.pm_bot.locel_types import TradingSide, TimeInForce, ExecutionStatus
+from pm_bot.configuration.selection import SubscriptionSelection
+from pm_bot.locel_types import TradingSide, TimeInForce, OrderStatus
 
 
 @dataclass(slots=True, frozen=True)
@@ -80,7 +80,7 @@ class OrderIntent:
 class ExecutionReport:
     execution_name: str
     order: OrderIntent
-    status: ExecutionStatus
+    status: OrderStatus
     timestamp: datetime
     filled_size: Decimal = Decimal("0")
     message: str | None = None

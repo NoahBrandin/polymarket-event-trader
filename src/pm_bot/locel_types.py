@@ -89,7 +89,7 @@ class TimeInForce(str, Enum):
     FAK = "FAK"
 
 
-class ExecutionStatus(str, Enum):
+class OrderStatus(str, Enum):
     LIVE = "LIVE"
     FILLED = "FILLED"
     PARTIALLY_FILLED = "PARTIALLY_FILLED"
@@ -101,9 +101,9 @@ class ExecutionStatus(str, Enum):
     @property
     def terminal(self) -> bool:
         return self in {
-            ExecutionStatus.FILLED,
-            ExecutionStatus.CANCELLED,
-            ExecutionStatus.EXPIRED,
-            ExecutionStatus.REJECTED,
-            ExecutionStatus.FAILED,
+            OrderStatus.FILLED,
+            OrderStatus.CANCELLED,
+            OrderStatus.EXPIRED,
+            OrderStatus.REJECTED,
+            OrderStatus.FAILED,
         }

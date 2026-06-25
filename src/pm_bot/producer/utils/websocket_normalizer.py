@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
-from src.pm_bot.configuration.logger_config import get_logger
-from src.pm_bot.locel_types import get_str_enum_from_value, get_unix_time_millis_to_datetime
-from src.pm_bot.pipeline.events import EventEnvelope, EventType, AssetUpdatePayload, MarketUpdatePayload, ErrorPayload
+from pm_bot.configuration.logger_config import get_logger
+from pm_bot.locel_types import get_str_enum_from_value, get_unix_time_millis_to_datetime
+from pm_bot.pipeline.events import EventEnvelope, EventType, AssetUpdatePayload, MarketUpdatePayload, ErrorPayload
 
 logger = get_logger()
 

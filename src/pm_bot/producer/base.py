@@ -3,10 +3,10 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 
-from src.pm_bot.configuration.logger_config import get_logger
-from src.pm_bot.configuration.selection import SubscriptionSelection
-from src.pm_bot.locel_types import SelectionType, ProducerName, ProducerDataType
-from src.pm_bot.pipeline.queue import EventQueue
+from pm_bot.configuration.logger_config import get_logger
+from pm_bot.configuration.selection import SubscriptionSelection
+from pm_bot.locel_types import SelectionType, ProducerName, ProducerDataType
+from pm_bot.pipeline.queue import EventQueue
 
 logger = get_logger()
 

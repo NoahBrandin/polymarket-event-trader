@@ -1,19 +1,20 @@
 import asyncio
+from contextlib import suppress
 from datetime import datetime, timezone
 from dataclasses import dataclass
 from typing import Callable
 
 import sys
 
-from src.pm_bot.configuration.logger_config import get_logger
-from src.pm_bot.configuration.selection import SubscriptionSelection
-from src.pm_bot.configuration.trading import StrategyDecision
-from src.pm_bot.consumers.execution.bass import Execution
-from src.pm_bot.consumers.strategy.base import Strategy
-from src.pm_bot.locel_types import StrategyName, ExecutionMode
-from src.pm_bot.pipeline.events import EventEnvelope, EventType
-from src.pm_bot.pipeline.queue import EventQueueStats, EventQueue
-from src.pm_bot.producer.base import Producer
+from pm_bot.configuration.logger_config import get_logger
+from pm_bot.configuration.selection import SubscriptionSelection
+from pm_bot.configuration.trading import StrategyDecision
+from pm_bot.consumers.execution.bass import Execution
+from pm_bot.consumers.strategy.base import Strategy
+from pm_bot.locel_types import StrategyName, ExecutionMode
+from pm_bot.pipeline.events import EventEnvelope, EventType
+from pm_bot.pipeline.queue import EventQueueStats, EventQueue
+from pm_bot.producer.base import Producer
 
 logger = get_logger()
 
@@ -207,8 +208,6 @@ class Engine:
                 queue_get.cancel()
                 await asyncio.gather(queue_get, return_exceptions=True)
 
-            if self.config.testing:
-                self._stopping = True
 
     async def _process_message(self, envelope: EventEnvelope) -> None:
         """
@@ -227,14 +226,24 @@ class Engine:
             self.event_handler(envelope)
 
         if self.strategy is None: # für test nur von Producer
+            if self.config.testing:
+                self._stopping = True
             return
 
         decision = await self._strategy_handel_envelope(envelope)
 
-        if self.execution is None or decision is None:
-           return
+        if decision is None:
+            return
+
+        if self.execution is None:
+            if self.config.testing:
+                self._stopping = True
+            return
 
         await self._execution_handel_decisions(decision)
+
+        if self.config.testing:
+            self._stopping = True
 
     async def _strategy_handel_envelope(self, envelope: EventEnvelope) -> StrategyDecision | None:
         if not envelope.producer_type == self.strategy.config.producer_type:
@@ -278,11 +287,19 @@ class Engine:
     async def _shutdown_producer(self) -> None:
         logger.debug("Shutting down producer...")
         await self.producer.stop()
-        if self._producer_task:
-            if not self._producer_task.done():
-                self._producer_task.cancel()
-            await self._producer_task
+
+        task = self._producer_task
         self._producer_task = None
+
+        if task is None:
+            return
+        try:
+            await asyncio.wait_for(task, timeout=5.0)
+        except TimeoutError:
+            logger.warning("Producer did not stop gracefully; cancelling task")
+            task.cancel()
+            with suppress(asyncio.CancelledError):
+                await task
 
     @property
     def is_running(self) -> bool:

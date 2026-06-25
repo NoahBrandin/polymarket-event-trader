@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 
-from src.pm_bot.configuration import logger_config
-from src.pm_bot.configuration.trading import OrderIntent
+from pm_bot.configuration import logger_config
+from pm_bot.configuration.trading import OrderIntent
 
-from src.pm_bot.consumers.execution.utils.account_interface import PaperAccountInterface, Position
-from src.pm_bot.consumers.execution.utils.config import PaperExecutionConfig
+from pm_bot.consumers.execution.utils.account_interface import PaperAccountInterface, Position
+from pm_bot.consumers.execution.utils.config import PaperExecutionConfig
 from polymarket_interfaces import ClobMarketAPI
-from src.pm_bot.configuration.trading import ExecutionReport
-from src.pm_bot.consumers.execution.bass import Execution
-from src.pm_bot.locel_types import ExecutionMode, ExecutionStatus, TradingSide
+from pm_bot.configuration.trading import ExecutionReport
+from pm_bot.consumers.execution.bass import Execution
+from pm_bot.locel_types import ExecutionMode, OrderStatus, TradingSide
 
 from datetime import datetime
 
@@ -37,7 +37,7 @@ class PaperExecution(Execution):
         return ExecutionReport(
             execution_name=self.creat_execution_name(order),
             order = order,
-            status = ExecutionStatus.FAILED,
+            status = OrderStatus.FAILED,
             timestamp=datetime.utcnow(),
         )
 
@@ -56,8 +56,8 @@ class PaperExecution(Execution):
         return ExecutionReport(
             execution_name=self.creat_execution_name(order),
             order=order,
-            status=ExecutionStatus.LIVE,
-            timestamp=datetime.utcnow(),
+            status=OrderStatus.LIVE,
+            timestamp=datetime,
         )
 
     async def close(self, order:OrderIntent) -> ExecutionReport:
@@ -74,7 +74,7 @@ class PaperExecution(Execution):
         return ExecutionReport(
             execution_name=self.creat_execution_name(order),
             order = order,
-            status = ExecutionStatus.LIVE,
+            status = OrderStatus.LIVE,
             timestamp=datetime.utcnow(),
         )
 

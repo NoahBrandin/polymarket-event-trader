@@ -1,7 +1,7 @@
 import logging
 import logging.handlers
 from enum import Enum
-from src.pm_bot.locel_types import LogMode
+from pm_bot.locel_types import LogMode
 
 _logger_instance = None
 

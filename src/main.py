@@ -1,8 +1,8 @@
 
 
-from src.pm_bot.configuration.bot_setup import setup
+from pm_bot.configuration.bot_setup import setup
 
-from src.pm_bot.locel_types import StrategyName, ExecutionMode, LogMode, ProducerName
+from pm_bot.locel_types import StrategyName, ExecutionMode, LogMode, ProducerName
 
 
 _BOT_NAME: str = "testerheld"

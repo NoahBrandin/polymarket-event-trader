@@ -3,7 +3,7 @@ from dataclasses import dataclass, fields
 from enum import Enum
 from typing import Any, Literal, Optional
 
-from src.pm_bot.locel_types import ProducerDataType
+from pm_bot.locel_types import ProducerDataType
 
 class EventType(Enum):
     DEFAULT = "default"
@@ -35,7 +35,7 @@ class EventEnvelope:
     producer_type: ProducerDataType
     sequence: int = -1
 
-    received_at: datetime = datetime.utcnow()
+    received_at: datetime = datetime
     timestamp: datetime
 
     event_type: EventType
@@ -79,13 +79,13 @@ class BasePayload:
 @dataclass(slots=True, frozen=True, kw_only=True)
 class HeartbeatPayload(BasePayload):
     event_type = EventType.HEARTBEAT
-    timestamp = datetime.utcnow()
+    timestamp = datetime
 
 @dataclass(slots=True, frozen=True, kw_only=True)
 class ErrorPayload(BasePayload):
     event_type = EventType.ERROR
     message: str
-    timestamp: datetime = datetime.utcnow()
+    timestamp: datetime = datetime
     details: Optional[Any]
 
 @dataclass(slots=True, frozen=True, kw_only=True)

@@ -3,20 +3,20 @@ import re
 from typing import Dict, TypeVar, Any
 
 
-from src.pm_bot.configuration.config import BotConfig
-from src.pm_bot.configuration.logger_config import get_logger
-from src.pm_bot.consumers.execution.bass import Execution
-from src.pm_bot.consumers.strategy.base import Strategy
-from src.pm_bot.locel_types import ExecutionMode, StrategyName, ProducerName, camel_to_snake
-from src.pm_bot.producer.base import Producer
+from pm_bot.configuration.config import BotConfig
+from pm_bot.configuration.logger_config import get_logger
+from pm_bot.consumers.execution.bass import Execution
+from pm_bot.consumers.strategy.base import Strategy
+from pm_bot.locel_types import ExecutionMode, StrategyName, ProducerName, camel_to_snake
+from pm_bot.producer.base import Producer
 
 logger = get_logger()
 
 T = TypeVar("T")
 
-PRODUCER_PATH = "src/pm_bot/producer"
-STRATEGY_PATH = "src/pm_bot/consumers/strategy"
-EXECUTION_PATH = "src/pm_bot/consumers/execution"
+PRODUCER_PATH = "pm_bot/producer"
+STRATEGY_PATH = "pm_bot/consumers/strategy"
+EXECUTION_PATH = "pm_bot/consumers/execution"
 
 def _load_class(parent_path: str, class_name) -> type[Any]:
     """

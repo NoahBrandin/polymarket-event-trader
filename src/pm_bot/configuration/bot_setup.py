@@ -1,13 +1,13 @@
 import asyncio
 import signal
 
-from src.pm_bot.configuration import logger_config, factory
-from src.pm_bot.configuration.config import BotConfig
-from src.pm_bot.consumers.execution.bass import Execution
-from src.pm_bot.consumers.strategy.base import Strategy
-from src.pm_bot.locel_types import StrategyName, ProducerName, ExecutionMode, LogMode
-from src.pm_bot.pipeline.engine import EngineConfig, Engine, EngineStats
-from src.pm_bot.producer.base import Producer
+from pm_bot.configuration import logger_config, factory
+from pm_bot.configuration.config import BotConfig
+from pm_bot.consumers.execution.bass import Execution
+from pm_bot.consumers.strategy.base import Strategy
+from pm_bot.locel_types import StrategyName, ProducerName, ExecutionMode, LogMode
+from pm_bot.pipeline.engine import EngineConfig, Engine, EngineStats
+from pm_bot.producer.base import Producer
 
 
 def setup(log_mode: LogMode = LogMode.INFO,
@@ -53,7 +53,6 @@ def setup(log_mode: LogMode = LogMode.INFO,
             )
         )
         logger.debug(f"Engine run-methode stopped")
-        logger.info(f"Engine run-methode {"failed" if _engine_run_failed(stats) else "completed"}")
     except KeyboardInterrupt:
         logger.warning(f"Bot shutdown by user")
         report = execution.report()
@@ -61,9 +60,9 @@ def setup(log_mode: LogMode = LogMode.INFO,
             logger.info(f"Execution report: available_cash={report.available_cash} "
                         f"open_position={str(report.open_position)} close_position={str(report.close_position)}, "
                         f"trade_volume={report.trade_volume}")
-    except BaseException as error:
-        logger.error(f"Bot_run failed with error {error}")
-        raise BaseException("Bot-Run durch fehlgeschlagen")
+    except Exception:
+        logger.exception("Bot run failed")
+        raise
 
 
 async def _run_engine(engine: Engine) -> EngineStats:
@@ -129,15 +128,3 @@ async def _async_start(
         config=config,
     )
     return await _run_engine(engine)
-
-
-def _engine_failure_counts(stats: EngineStats) -> dict[str, int]:
-    return {
-        "producer_failures": stats.producer_failures,
-        "strategy_failures": stats.strategy_failures,
-        "execution_failures": stats.execution_failures,
-    }
-
-
-def _engine_run_failed(stats: EngineStats) -> bool:
-    return any(_engine_failure_counts(stats).values())
