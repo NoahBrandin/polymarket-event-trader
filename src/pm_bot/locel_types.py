@@ -53,12 +53,8 @@ class LogMode(StrEnum):
     INFO = "INFO"
     ERROR = "ERROR"
 
-class SourceMode(StrEnum):
-    LIVE = "live"
-    BACKTEST = "backtest"
-
 class StrategyName(StrEnum):
-    NONE = "none" #used for debugging and testing
+    NONE = "None" #used for debugging and testing
     DEFAULT_RANDOM_STRATEGY = "DefaultRandomStrategy"
 
 class StrategyType(StrEnum):

@@ -3,6 +3,8 @@ from datetime import datetime, timezone
 from dataclasses import dataclass
 from typing import Callable
 
+import sys
+
 from src.pm_bot.configuration.logger_config import get_logger
 from src.pm_bot.configuration.selection import SubscriptionSelection
 from src.pm_bot.configuration.trading import StrategyDecision
@@ -27,6 +29,8 @@ class EngineStats:
 @dataclass(slots=True, frozen=True)
 class EngineConfig:
     queue_size: int = 10_000
+
+    testing:bool = False #only use for tests
 
     tick_hz: int = 60 #schläge die Sekunde
 
@@ -93,12 +97,20 @@ class Engine:
                     )
 
                 await self._consume_until_producers_finish() # Start main_loop
+        except SystemExit as error:
+            raise
         except Exception as error:
             logger.error(f"Engine.run() is failed with error: {error}")
             raise Exception(f"Engine.run() is failed with error: {error}")
 
         finally:
-            await self._shutdown_producers()
+            if self._stopping:
+                logger.info(f"Initiating GRACEFUL shutdown...")
+            else:
+                logger.info(f"Initiating shutdown...")
+
+            await self._shutdown_producer()
+            logger.debug(f"Producer shut down")
             if self.strategy is not None:
                 try:
                     await self.strategy.on_stop()
@@ -150,7 +162,7 @@ class Engine:
         """
         tick_hz = 1.0 / self.config.tick_hz
 
-        while self._producer_task or not self.event_queue.empty: # Solang Events in Queue oder noch produziert werden
+        while (self._producer_task or not self.event_queue.empty) and not self._stopping: # Solang Events in Queue oder noch produziert werden
             queue_get = asyncio.create_task( #Task die das Event aus Queue pulled
                 self.event_queue.get(),
                 name="event-engine:queue-get",
@@ -194,6 +206,9 @@ class Engine:
             else:
                 queue_get.cancel()
                 await asyncio.gather(queue_get, return_exceptions=True)
+
+            if self.config.testing:
+                self._stopping = True
 
     async def _process_message(self, envelope: EventEnvelope) -> None:
         """
@@ -260,7 +275,8 @@ class Engine:
         if self.config.print_lifecycle:
             logger.info(f"[MARKET SELECTION] ids={sorted(selection.ids)}")
 
-    async def _shutdown_producers(self) -> None:
+    async def _shutdown_producer(self) -> None:
+        logger.debug("Shutting down producer...")
         await self.producer.stop()
         if self._producer_task:
             if not self._producer_task.done():

@@ -7,7 +7,7 @@ from src.pm_bot.configuration.config import BotConfig
 from src.pm_bot.configuration.logger_config import get_logger
 from src.pm_bot.consumers.execution.bass import Execution
 from src.pm_bot.consumers.strategy.base import Strategy
-from src.pm_bot.locel_types import ExecutionMode, StrategyName, ProducerDataType, SourceMode, ProducerName, camel_to_snake
+from src.pm_bot.locel_types import ExecutionMode, StrategyName, ProducerName, camel_to_snake
 from src.pm_bot.producer.base import Producer
 
 logger = get_logger()
@@ -61,6 +61,8 @@ def _create_plugin(component_name:str, component_parent_path: str , expected_typ
     return cls()
 
 def _create_execution(execution_mode) -> T:
+    logger.debug(f"Execution_mode is {execution_mode}, type is {type(execution_mode)}, "
+                 f"but isinstance(execution_mode, ExecutionMode)= {isinstance(execution_mode, ExecutionMode)}")
     if isinstance(execution_mode, ExecutionMode):
         if execution_mode == ExecutionMode.NONE: return None
         return _create_plugin(execution_mode, EXECUTION_PATH, Execution)

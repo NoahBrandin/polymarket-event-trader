@@ -21,7 +21,7 @@ from enum import Enum
 from types import SimpleNamespace
 from typing import Any
 
-from pm_bot.locel_types import TimeInForce
+from src.pm_bot.locel_types import TimeInForce
 from .clob_market_api import CLOB_API_BASE, ClobSide
 from .utils.utils import ApiType, ErrorCode, PolymarketError, RateLimiter, UnifiedCache
 

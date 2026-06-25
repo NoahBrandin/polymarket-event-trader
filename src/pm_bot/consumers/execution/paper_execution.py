@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from pm_bot.configuration import logger_config
-from pm_bot.configuration.trading import OrderIntent
+from src.pm_bot.configuration import logger_config
+from src.pm_bot.configuration.trading import OrderIntent
 
-from pm_bot.consumers.execution.utils.account_interface import PaperAccountInterface, Position
-from pm_bot.consumers.execution.utils.config import PaperExecutionConfig
+from src.pm_bot.consumers.execution.utils.account_interface import PaperAccountInterface, Position
+from src.pm_bot.consumers.execution.utils.config import PaperExecutionConfig
 from polymarket_interfaces import ClobMarketAPI
 from src.pm_bot.configuration.trading import ExecutionReport
 from src.pm_bot.consumers.execution.bass import Execution

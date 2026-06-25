@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass
 
-from pm_bot.locel_types import ExecutionMode, NonNegativeDecimal, Probability
+from src.pm_bot.locel_types import ExecutionMode, NonNegativeDecimal, Probability
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

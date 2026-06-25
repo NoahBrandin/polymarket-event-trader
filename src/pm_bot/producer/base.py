@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 from src.pm_bot.configuration.logger_config import get_logger
 from src.pm_bot.configuration.selection import SubscriptionSelection
-from src.pm_bot.locel_types import SelectionType, ProducerName, ProducerDataType, SourceMode
+from src.pm_bot.locel_types import SelectionType, ProducerName, ProducerDataType
 from src.pm_bot.pipeline.queue import EventQueue
 
 logger = get_logger()
@@ -15,8 +15,6 @@ class ProducerConfig:
     name: ProducerName
 
     type: ProducerDataType
-    source_mode: SourceMode
-
     selection_type: SelectionType
 
 
@@ -72,7 +70,9 @@ class Producer(ABC):
 
     async def stop(self) -> None:
         """Fordert ein kooperatives Ende des Producers an."""
+        logger.debug("Producer stop requested")
         self._stop_requested.set()
+        logger.debug("Producer stop initiated")
         await self._on_stop()
 
     @abstractmethod

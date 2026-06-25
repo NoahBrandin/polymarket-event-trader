@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
 
-from pm_bot.consumers.execution.utils.account_interface import AccountInterface, PaperAccountInterface, Position
-from pm_bot.consumers.execution.utils.config import ExecutionConfig
+from src.pm_bot.consumers.execution.utils.account_interface import AccountInterface, PaperAccountInterface, Position
+from src.pm_bot.consumers.execution.utils.config import ExecutionConfig
 from src.pm_bot.configuration.trading import ExecutionReport, OrderIntent
 
 @dataclass(frozen=True, slots=True, kw_only=True)

@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from decimal import Decimal
 
-from pm_bot.consumers.execution.utils.config import PaperExecutionConfig
-from pm_bot.locel_types import NonNegativeDecimal
+from src.pm_bot.consumers.execution.utils.config import PaperExecutionConfig
+from src.pm_bot.locel_types import NonNegativeDecimal
 
 
 @dataclass
