@@ -7,7 +7,7 @@ from src.pm_bot.configuration.config import BotConfig
 from src.pm_bot.configuration.logger_config import get_logger
 from src.pm_bot.consumers.execution.bass import Execution
 from src.pm_bot.consumers.strategy.base import Strategy
-from src.pm_bot.locel_types import RunMode, StrategyName, ProducerDataType, SourceMode, ProducerName, camel_to_snake
+from src.pm_bot.locel_types import ExecutionMode, StrategyName, ProducerDataType, SourceMode, ProducerName, camel_to_snake
 from src.pm_bot.producer.base import Producer
 
 logger = get_logger()
@@ -60,13 +60,13 @@ def _create_plugin(component_name:str, component_parent_path: str , expected_typ
         )
     return cls()
 
-def _create_execution(run_mode) -> T:
-    if isinstance(run_mode, RunMode):
-        if run_mode == RunMode.NONE: return None
-        return _create_plugin(run_mode, EXECUTION_PATH, Execution)
+def _create_execution(execution_mode) -> T:
+    if isinstance(execution_mode, ExecutionMode):
+        if execution_mode == ExecutionMode.NONE: return None
+        return _create_plugin(execution_mode, EXECUTION_PATH, Execution)
     else:
-        logger.error(f"run_mode {run_mode} not supported")
-        raise ValueError(f"run_mode {run_mode} not supported")
+        logger.error(f"run_mode {execution_mode} not supported")
+        raise ValueError(f"run_mode {execution_mode} not supported")
 
 def _create_strategy(strategy_name) -> T:
     if isinstance(strategy_name, StrategyName):
@@ -83,25 +83,10 @@ def _create_producer(producer_name) -> T:
         logger.error(f"producer_name {producer_name} not supported")
         raise ValueError(f"producer_name {producer_name} not supported")
 
-    if not isinstance(producer_name, SourceMode):
-        logger.error(f"source_mode {source_mode} not supported")
-        raise ValueError(f"source_mode {source_mode} not supported")
-
-    if source_mode == SourceMode.LIVE:
-        if (producer_type == ProducerDataType.WEBSOCKET):
-            return _create_plugin("WebsocketApp", PRODUCER_PATH, Producer)
-        elif (producer_type == ProducerDataType.DATA_API):
-            return _create_plugin("DataAPIApp", PRODUCER_PATH, Producer)
-    elif source_mode == SourceMode.BACKTEST:
-        logger.error(f"source_mode {source_mode} not yet implemented")
-        raise ValueError(f"source_mode {source_mode} not yet implemented")
-
-    logger.error(f"producer_type:{producer_type} or source_mode:{source_mode} failed supported")
-    raise ValueError(f"producer_type:{producer_type} or source_mode:{source_mode} failed supported")
 
 def get_components(config: BotConfig) -> Dict:
+    execution = _create_execution(config.execution_mode)
     strategy = _create_strategy(config.strategy_name)
     producer = _create_producer(config.producer_name)
-    execution = _create_execution(config.run_mode)
 
     return {"strategy": strategy, "producer": producer, "execution": execution,}

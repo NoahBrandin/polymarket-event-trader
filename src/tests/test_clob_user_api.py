@@ -11,7 +11,7 @@ from polymarket_interfaces.clob_user_api import (
     CLOBApiCredentials,
     ClobUserAPI,
     ClobAssetType,
-    ClobOrderType,
+    TimeInForce,
     LimitOrderRequest,
     MarketOrderRequest,
 )
@@ -187,7 +187,7 @@ async def test_places_limit_order_and_normalizes_response():
         side=ClobSide.BUY,
         price=Decimal("0.40"),
         size=Decimal("10"),
-        order_type=ClobOrderType.GTC,
+        order_type=TimeInForce.GTC,
         tick_size=Decimal("0.01"),
         post_only=True,
     )
@@ -217,7 +217,7 @@ async def test_places_market_sell_and_cancels_order():
             token_id="token",
             side=ClobSide.SELL,
             amount=Decimal("3.5"),
-            order_type=ClobOrderType.FAK,
+            order_type=TimeInForce.FAK,
         )
     )
     canceled = await api.cancel_order("order-2")

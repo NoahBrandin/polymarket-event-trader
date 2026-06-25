@@ -1,11 +1,18 @@
+"""Gemeinsame Infrastruktur für öffentliche Polymarket-HTTP-Clients."""
+
+from __future__ import annotations
+
 import asyncio
+from collections.abc import Awaitable, Callable, Mapping
 from enum import Enum
-from typing import Any, Mapping, Protocol, Callable, Awaitable, TypeVar
+from typing import Any, Protocol, TypeVar
 
 T = TypeVar("T")
 
+
 class ErrorCode(str, Enum):
-    """Definiert stabile Fehlercodes für Polymarket-API-Aufrufe."""
+    """Stabile Fehlercodes für öffentliche Polymarket-API-Aufrufe."""
+
     NETWORK_ERROR = "NETWORK_ERROR"
     TIMEOUT = "TIMEOUT"
     RATE_LIMITED = "RATE_LIMITED"
@@ -36,11 +43,9 @@ class PolymarketError(Exception):
     def from_http_error(cls, status: int, body: Any = None) -> "PolymarketError":
         body_message = ""
         if isinstance(body, Mapping):
-            for key in ("message", "error", "errorMsg", "error_msg"):
-                value = body.get(key)
-                if value not in (None, ""):
-                    body_message = str(value)
-                    break
+            candidate = body.get("message") or body.get("error")
+            if candidate is not None:
+                body_message = str(candidate)
 
         if status == 429:
             return cls(
@@ -75,45 +80,16 @@ class ApiType(str, Enum):
     """Kennzeichnet den durch den RateLimiter gesteuerten API-Typ."""
 
     GAMMA_API = "gamma-api"
-    CLOB_API = "clob-api"
     DATA_API = "data-api"
 
 
-
-class UnifiedCache(Protocol):
-    """
-    Entspricht konzeptionell dem UnifiedCache des TypeScript-Projekts.
-
-    Der ursprüngliche GammaApiClient speichert den Cache zwar im Konstruktor,
-    verwendet ihn in seinen Methoden aber derzeit nicht.
-    """
-
-    async def get(self, key: str) -> Any | None:
-        ...
-
-    async def set(self, key: str, value: Any, ttl_ms: int) -> None:
-        ...
-
-    async def invalidate(self, pattern: str) -> None:
-        ...
-
-    def clear(self) -> None:
-        ...
-
-
-
 class RateLimiter:
-    """
-    Asynchroner Token-Bucket-Rate-Limiter.
-
-    Standardmäßig sind kurzfristige Bursts bis 10 Requests möglich; langfristig
-    werden höchstens 10 Requests pro Sekunde gestartet.
-    """
+    """Asynchroner Token-Bucket-Rate-Limiter."""
 
     def __init__(
-            self,
-            requests_per_second: float = 10.0,
-            burst_capacity: int = 10,
+        self,
+        requests_per_second: float = 10.0,
+        burst_capacity: int = 10,
     ) -> None:
         if requests_per_second <= 0:
             raise ValueError("requests_per_second muss positiv sein")
@@ -132,7 +108,6 @@ class RateLimiter:
         while True:
             async with self._lock:
                 now = loop.time()
-
                 if self._last_refill is None:
                     self._last_refill = now
 
@@ -152,12 +127,28 @@ class RateLimiter:
             await asyncio.sleep(wait_seconds)
 
     async def execute(
-            self,
-            api: ApiType,
-            operation: Callable[[], Awaitable[T]],
+        self,
+        api: ApiType,
+        operation: Callable[[], Awaitable[T]],
     ) -> T:
         if not isinstance(api, ApiType):
             raise ValueError(f"Unbekannter API-Typ: {api}")
 
         await self._acquire()
         return await operation()
+
+
+class UnifiedCache(Protocol):
+    """Minimale Cache-Schnittstelle für Polymarket-Clients."""
+
+    async def get(self, key: str) -> Any | None:
+        ...
+
+    async def set(self, key: str, value: Any, ttl_ms: int) -> None:
+        ...
+
+    async def invalidate(self, pattern: str) -> None:
+        ...
+
+    def clear(self) -> None:
+        ...

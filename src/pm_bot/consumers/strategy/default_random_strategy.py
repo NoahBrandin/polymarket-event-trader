@@ -38,18 +38,29 @@ class DefaultRandomStrategy(Strategy):
             if asset.asset_id is None:
                 continue
 
-            decider  = random.randint(1, 20)
-            if decider <= 18:
-                continue
-            size = random.randint(1, 10)
-            orders.append(OrderIntent(
-                strategy_name=self.config.strategy_name,
-                asset_id=asset.asset_id,
-                market_id=envelope.payload.market_id,
-                side= TradingSide.BUY if decider == 19 else TradingSide.SELL,
-                size=Decimal(size),
-                limit_price= Decimal(float(random.randint(1, 10)/11)),
-            ))
+            if random.randint(1, 20) == 1:
+                size = random.randint(1, 10)
+                orders.append(OrderIntent(
+                    strategy_name=self.config.strategy_name,
+                    asset_id=asset.asset_id,
+                    market_id=envelope.payload.market_id,
+                    side= TradingSide.BUY,
+                    size=Decimal(size),
+                    limit_price= Decimal(float(random.randint(1, 10)/11)),
+                ))
+
+        if self._account_interface is not None:
+            for open_position in self._account_interface.get_open_positions().keys():
+                if random.randint(1, 20) == 1:
+                    orders.append(OrderIntent(
+                        strategy_name=self.config.strategy_name,
+                        asset_id=open_position,
+                        market_id=envelope.payload.market_id,
+                        side=TradingSide.SELL,
+                        size=Decimal("1.67"),
+                        limit_price=Decimal("0.67"),
+                    ))
+
         if orders:
             return StrategyDecision(orders=orders)
         return None

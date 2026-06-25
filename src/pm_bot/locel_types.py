@@ -43,10 +43,10 @@ class Probability(Decimal):
             )
         return super().__new__(cls, decimal_value)
 
-class RunMode(StrEnum):
-    NONE = "none" #used for debugging and testing
-    LIVE = "live_execution"
-    PAPER = "paper_execution"
+class ExecutionMode(StrEnum):
+    NONE = "None" #used for debugging and testing
+    LIVE = "LiveExecution"
+    PAPER = "PaperExecution"
 
 class LogMode(StrEnum):
     DEBUG = "DEBUG"
@@ -56,7 +56,6 @@ class LogMode(StrEnum):
 class SourceMode(StrEnum):
     LIVE = "live"
     BACKTEST = "backtest"
-
 
 class StrategyName(StrEnum):
     NONE = "none" #used for debugging and testing

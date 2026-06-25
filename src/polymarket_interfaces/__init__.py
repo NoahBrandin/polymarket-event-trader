@@ -5,6 +5,14 @@
 # ============================================================================
 # Bot-Komponenten importieren Polymarket-Typen über dieses Paket.
 
+from .utils.utils import (
+    ApiType,
+    ErrorCode,
+    PolymarketError,
+    RateLimiter,
+    UnifiedCache,
+)
+
 from .clob_market_api import (
     CLOB_API_BASE,
     INITIAL_CURSOR,
@@ -23,6 +31,28 @@ from .clob_market_api import (
     PricePoint,
     PriceQuote,
 )
+
+from .data_api import (
+    DATA_API_BASE,
+    Activity,
+    ActivityQuery,
+    ActivitySortBy,
+    ActivityType,
+    ClosedPosition,
+    ClosedPositionQuery,
+    ClosedPositionSortBy,
+    DataAPI,
+    Position,
+    PositionQuery,
+    PositionSortBy,
+    PositionValue,
+    SortDirection,
+    Trade,
+    TradeFilterType,
+    TradeQuery,
+    TradeSide,
+)
+
 from .gamma_api import (
     GAMMA_API_BASE,
     ApiType,
@@ -115,4 +145,22 @@ __all__ = [
     "UnifiedCache",
     "UnknownMarketEvent",
     "WebSocketErrorCode",
+    "DATA_API_BASE",
+    "Activity",
+    "ActivityQuery",
+    "ActivitySortBy",
+    "ActivityType",
+    "ClosedPosition",
+    "ClosedPositionQuery",
+    "ClosedPositionSortBy",
+    "DataAPI",
+    "Position",
+    "PositionQuery",
+    "PositionSortBy",
+    "PositionValue",
+    "SortDirection",
+    "Trade",
+    "TradeFilterType",
+    "TradeQuery",
+    "TradeSide",
 ]

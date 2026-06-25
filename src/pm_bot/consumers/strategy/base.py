@@ -6,6 +6,7 @@ from src.pm_bot.configuration.trading import StrategyDecision, ExecutionReport
 from src.pm_bot.locel_types import StrategyName, StrategyType, ProducerDataType
 from src.pm_bot.pipeline.events import EventEnvelope
 
+from src.pm_bot.consumers.execution.utils.account_interface import AccountInterface
 
 @dataclass(frozen=True)
 class StrategyConfig:
@@ -17,6 +18,7 @@ class Strategy(ABC):
 
     def __init__(self, config: StrategyConfig):
         self.config = config
+        self._account_interface: AccountInterface | None = None
 
     @abstractmethod
     def get_subscription_selection(self) -> SubscriptionSelection:
@@ -38,3 +40,6 @@ class Strategy(ABC):
     @abstractmethod
     async def on_stop(self) -> None:
         pass
+
+    async def add_account_interface(self, account_interface: AccountInterface):
+        self._account_interface = account_interface

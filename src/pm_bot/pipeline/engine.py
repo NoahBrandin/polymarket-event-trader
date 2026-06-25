@@ -8,7 +8,7 @@ from src.pm_bot.configuration.selection import SubscriptionSelection
 from src.pm_bot.configuration.trading import StrategyDecision
 from src.pm_bot.consumers.execution.bass import Execution
 from src.pm_bot.consumers.strategy.base import Strategy
-from src.pm_bot.locel_types import StrategyName, RunMode
+from src.pm_bot.locel_types import StrategyName, ExecutionMode
 from src.pm_bot.pipeline.events import EventEnvelope, EventType
 from src.pm_bot.pipeline.queue import EventQueueStats, EventQueue
 from src.pm_bot.producer.base import Producer
@@ -51,9 +51,9 @@ class Engine:
             execution: Execution,
             config: EngineConfig,
             ) -> None:
-        self.producer = producer
-        self.strategy = strategy
-        self.execution = execution
+        self.producer: Producer = producer
+        self.strategy: Strategy = strategy
+        self.execution: Execution = execution
         self.config = config
 
         self._running = False
@@ -81,7 +81,7 @@ class Engine:
         self._stopping = False
         logger.info(f"Engine.run() is starting. Whit producer: {self.producer.config.name}, "
                     f"strategy: {self.strategy.config.strategy_name if self.strategy else StrategyName.NONE }, "
-                    f"execution: {self.execution.run_mode if self.execution else RunMode.NONE}")
+                    f"execution: {self.execution.config.execution_name if self.execution else ExecutionMode.NONE}")
 
         try:
             await self._start()
@@ -132,12 +132,14 @@ class Engine:
                 raise Exception(f"Strategy-Start fehlgeschlagen: {error}")
 
             if self.execution is not None:
+                await self.strategy.add_account_interface(self.execution.account_interface)
+                if initial_decision is not None:
+                    try:
+                        report = await self._execution_handel_decisions(initial_decision)
+                    except Exception as error:
+                        logger.error(f"Execution-Start fehlgeschlagen: {error}")
+                        raise Exception(f"Execution-Start fehlgeschlagen: {error}")
 
-                try:
-                    report = await self._execution_handel_decisions(initial_decision)
-                except Exception as error:
-                    logger.error(f"Execution-Start fehlgeschlagen: {error}")
-                    raise Exception(f"Execution-Start fehlgeschlagen: {error}")
         else:
             await self._apply_subscription_selection(await self.producer.get_default_subscription_selection())
 
@@ -242,7 +244,7 @@ class Engine:
 
         for order in decision.orders:
             self._submitted_orders += 1
-            logger.info(f"Submitted order: {order}")
+            logger.debug(f"Submitted order: {order}")
             try:
                 report = await self.execution.execute(order)
             except Exception as error:

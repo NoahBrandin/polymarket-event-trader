@@ -67,17 +67,13 @@ class OrderIntent:
 
     def __str__(self) -> str:
         # Die absoluten Kern-Daten der Order, die IMMER da sind
-        core_info = (
+        return (f"OrderIntent {{"
             f"asset_id={self.asset_id[:8]}... "  # Gekürzte UUID für bessere Lesbarkeit im Log
             f"strategy={self.strategy_name} "
             f"side={self.side.name} "
-            f"side={self.side.name} "  # .name falls TradingSide ein Enum ist
             f"size={self.size} "
             f"limit={self.limit_price} "
-            f"tif={self.time_in_force.name}"
-        )
-
-        return f"OrderIntent {{{core_info}}}"
+            f"tif={self.time_in_force.name} }}")
 
 
 @dataclass(slots=True, frozen=True, kw_only=True)
@@ -87,9 +83,15 @@ class ExecutionReport:
     status: ExecutionStatus
     timestamp: datetime
     filled_size: Decimal = Decimal("0")
-    average_price: Decimal | None = None
-    remaining_size: Decimal = Decimal("0")
-    exchange_order_id: str | None = None
     message: str | None = None
     raw: Mapping[str, Any] = field(default_factory=dict)
+
+    def __str__(self) -> str:
+        return (f"execution_name={self.execution_name} "
+                f"order={self.order} "
+                f"status={self.status} "
+                f"timestamp={self.timestamp} "
+                f"filled_size={self.filled_size} "
+                f"message={self.message}")
+
 

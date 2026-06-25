@@ -21,21 +21,13 @@ from enum import Enum
 from types import SimpleNamespace
 from typing import Any
 
+from pm_bot.locel_types import TimeInForce
 from .clob_market_api import CLOB_API_BASE, ClobSide
 from .utils.utils import ApiType, ErrorCode, PolymarketError, RateLimiter, UnifiedCache
 
 
 POLYGON_CHAIN_ID = 137
 _ALLOWED_TICK_SIZES = {"0.1", "0.01", "0.001", "0.0001"}
-
-
-class ClobOrderType(str, Enum):
-    """Unterstützte Time-in-Force-Varianten."""
-
-    GTC = "GTC"
-    GTD = "GTD"
-    FOK = "FOK"
-    FAK = "FAK"
 
 
 class ClobAssetType(str, Enum):
@@ -72,7 +64,7 @@ class LimitOrderRequest:
     side: ClobSide
     price: Decimal
     size: Decimal
-    order_type: ClobOrderType = ClobOrderType.GTC
+    order_type: TimeInForce = TimeInForce.GTC
     expiration: int = 0
     tick_size: Decimal | None = None
     neg_risk: bool | None = None
@@ -92,11 +84,11 @@ class LimitOrderRequest:
         object.__setattr__(self, "price", price)
         object.__setattr__(self, "size", size)
 
-        if self.order_type not in (ClobOrderType.GTC, ClobOrderType.GTD):
+        if self.order_type not in (TimeInForce.GTC, TimeInForce.GTD):
             raise ValueError("Limit-Orders unterstützen nur GTC oder GTD")
-        if self.order_type is ClobOrderType.GTD and self.expiration <= 0:
+        if self.order_type is TimeInForce.GTD and self.expiration <= 0:
             raise ValueError("GTD benötigt expiration als positiven Unix-Zeitstempel")
-        if self.order_type is ClobOrderType.GTC and self.expiration < 0:
+        if self.order_type is TimeInForce.GTC and self.expiration < 0:
             raise ValueError("expiration darf nicht negativ sein")
 
         object.__setattr__(self, "tick_size", _normalize_tick_size(self.tick_size))
@@ -119,7 +111,7 @@ class MarketOrderRequest:
     token_id: str
     side: ClobSide
     amount: Decimal
-    order_type: ClobOrderType = ClobOrderType.FOK
+    order_type: TimeInForce = TimeInForce.FOK
     price: Decimal | None = None
     tick_size: Decimal | None = None
     neg_risk: bool | None = None
@@ -132,7 +124,7 @@ class MarketOrderRequest:
         _require_text(self.token_id, "token_id")
         _require_side(self.side)
         object.__setattr__(self, "amount", _positive_decimal(self.amount, "amount"))
-        if self.order_type not in (ClobOrderType.FOK, ClobOrderType.FAK):
+        if self.order_type not in (TimeInForce.FOK, TimeInForce.FAK):
             raise ValueError("Market-Orders unterstützen nur FOK oder FAK")
         if self.price is not None:
             price = _positive_decimal(self.price, "price")
@@ -830,3 +822,4 @@ def _optional_string(value: Any) -> str | None:
         return None
     text = str(value)
     return text if text else None
+

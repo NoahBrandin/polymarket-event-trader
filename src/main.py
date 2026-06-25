@@ -7,13 +7,13 @@ from src.pm_bot.configuration import factory
 from src.pm_bot.configuration.config import BotConfig
 from src.pm_bot.consumers.execution.bass import Execution
 from src.pm_bot.consumers.strategy.base import Strategy
-from src.pm_bot.locel_types import StrategyName, RunMode, LogMode, SourceMode, ProducerName
+from src.pm_bot.locel_types import StrategyName, ExecutionMode, LogMode, SourceMode, ProducerName
 from src.pm_bot.pipeline.engine import EngineStats, Engine, EngineConfig
 from src.pm_bot.producer.base import Producer
 
 _BOT_NAME: str = "testerheld"
 
-_RUN_MODE: RunMode = RunMode.NONE
+_EXECUTION_MODE: ExecutionMode = ExecutionMode.PAPER
 _LOG_MODE: LogMode = LogMode.INFO
 _SOURCE_MODE: SourceMode = SourceMode.LIVE
 
@@ -32,7 +32,7 @@ def main():
     logger.info("Logger setup")
 
     logger.debug("Setting up bot_config")
-    bot_config: BotConfig = BotConfig(name=_BOT_NAME, run_mode=_RUN_MODE, log_mode=_LOG_MODE, source_mode=_SOURCE_MODE, producer_name=_PRODUCER, strategy_name=_STRATEGY)
+    bot_config: BotConfig = BotConfig(name=_BOT_NAME, execution_mode=_EXECUTION_MODE, log_mode=_LOG_MODE, source_mode=_SOURCE_MODE, producer_name=_PRODUCER, strategy_name=_STRATEGY)
     logger.info("Bot config setup")
 
     logger.debug("Setting up components")
@@ -59,9 +59,14 @@ def main():
         logger.info(f"Engine run-methode {"failed" if _engine_run_failed(stats) else "completed"}")
     except KeyboardInterrupt:
         logger.warning(f"Bot shutdown by user")
-    """except BaseException as error:
+        report = execution.report()
+        if report is not None:
+            logger.info(f"Execution report: available_cash={report.available_cash} "
+                        f"open_position={str(report.open_position)} close_position={str(report.close_position)}, "
+                        f"trade_volume={report.trade_volume}")
+    except BaseException as error:
         logger.error(f"Bot_run failed with error {error}")
-        raise BaseException("Bot-Run durch fehlgeschlagen")"""
+        raise BaseException("Bot-Run durch fehlgeschlagen")
 
 
 async def _run_engine(engine: Engine) -> EngineStats:
